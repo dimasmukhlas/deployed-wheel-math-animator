@@ -3,7 +3,8 @@ import { WheelAnimation } from "@/components/WheelAnimation";
 import { FormulaCard } from "@/components/FormulaCard";
 import { SliderControl } from "@/components/SliderControl";
 import { Button } from "@/components/ui/button";
-import { Circle, Route, Play, Pause, RotateCcw, Globe } from "lucide-react";
+import { Link } from "react-router-dom";
+import { Circle, Route, Play, Pause, RotateCcw, Globe, Home } from "lucide-react";
 import { useSoundEffects } from "@/hooks/useSoundEffects";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 
@@ -80,6 +81,14 @@ const Index = () => {
       {/* Header */}
       <header className="pt-8 pb-6 px-4">
         <div className="max-w-4xl mx-auto text-center">
+          <div className="flex justify-center mb-3">
+            <Button variant="ghost" size="sm" className="gap-2 text-muted-foreground" asChild>
+              <Link to="/">
+                <Home className="w-4 h-4" />
+                Beranda
+              </Link>
+            </Button>
+          </div>
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary text-sm font-medium mb-4">
             <Circle className="w-4 h-4" />
             Pembelajaran Interaktif
