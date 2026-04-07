@@ -1,10 +1,17 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useRef } from "react";
+import { toast } from "sonner";
 import { WheelAnimation } from "@/components/WheelAnimation";
 import { FormulaCard } from "@/components/FormulaCard";
 import { SliderControl } from "@/components/SliderControl";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { Circle, Route, Play, Pause, RotateCcw, Globe, Home } from "lucide-react";
+import { useAuth } from "@/contexts/AuthContext";
+import { UserAuthButton } from "@/components/auth/UserAuthButton";
+import { LoginExperienceNudge } from "@/components/auth/LoginExperienceNudge";
+import { saveWheelRecord } from "@/lib/records";
+import { incrementGuestWheelSessions } from "@/lib/guest-progress";
+import type { LandingLang } from "@/lib/landing-lang";
 import { useSoundEffects } from "@/hooks/useSoundEffects";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 
@@ -50,6 +57,9 @@ const Index = () => {
   const [distance, setDistance] = useState(10); // meters
   const [isAnimating, setIsAnimating] = useState(false);
   const [language, setLanguage] = useState<"en" | "id">("id");
+  const { user } = useAuth();
+  const lastRecordSaveAt = useRef(0);
+  const lastGuestSessionAt = useRef(0);
   const { playWheelSound, playCelebrationSound, playStartSound } = useSoundEffects();
 
   // Calculate circumference and rotations
@@ -66,7 +76,24 @@ const Index = () => {
 
   const handleCycleComplete = useCallback(() => {
     playCelebrationSound();
-  }, [playCelebrationSound]);
+    const now = Date.now();
+    if (user) {
+      if (now - lastRecordSaveAt.current < 4000) return;
+      lastRecordSaveAt.current = now;
+      void saveWheelRecord(user.uid, {
+        radiusCm: radius,
+        distanceM: distance,
+        rotations,
+        language: language as LandingLang,
+      }).catch(() => {
+        toast.error(language === "id" ? "Gagal menyimpan riwayat" : "Could not save record");
+      });
+    } else {
+      if (now - lastGuestSessionAt.current < 4000) return;
+      lastGuestSessionAt.current = now;
+      incrementGuestWheelSessions();
+    }
+  }, [playCelebrationSound, user, radius, distance, rotations, language]);
 
   const handleReset = () => {
     setRadius(35);
@@ -81,13 +108,14 @@ const Index = () => {
       {/* Header */}
       <header className="pt-8 pb-6 px-4">
         <div className="max-w-4xl mx-auto text-center">
-          <div className="flex justify-center mb-3">
+          <div className="flex flex-wrap items-center justify-between gap-3 mb-3">
             <Button variant="ghost" size="sm" className="gap-2 text-muted-foreground" asChild>
               <Link to="/">
                 <Home className="w-4 h-4" />
                 Beranda
               </Link>
             </Button>
+            <UserAuthButton lang={language as LandingLang} />
           </div>
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary text-sm font-medium mb-4">
             <Circle className="w-4 h-4" />
@@ -253,6 +281,8 @@ const Index = () => {
           </div>
         </section>
       </main>
+
+      <LoginExperienceNudge lang={language as LandingLang} />
     </div>
   );
 };

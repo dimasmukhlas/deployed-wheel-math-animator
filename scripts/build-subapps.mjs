@@ -26,3 +26,6 @@ copyDist("deployed-shape-explorer-main", "shape");
 
 installAndBuild("deployed-fraction-fun-animated-main");
 copyDist("deployed-fraction-fun-animated-main", "fraction");
+
+installAndBuild("deployed-sponge-bob");
+copyDist("deployed-sponge-bob", "sponge");

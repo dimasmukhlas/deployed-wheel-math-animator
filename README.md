@@ -80,4 +80,17 @@ Yes, you can!
 To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
 
 Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
-# deployed-wheel-math-animator
+
+## SpongeBob English / Indonesian (sub-app)
+
+The **SpongeBob** language app lives in `deployed-sponge-bob` and is built into `public/sponge/` on `npm run build`, same as Shape and Fraction. It is served at **`/sponge/`** on the Cognizo Wheel site (same host as `cognizowheel.web.app`).
+
+## Sign-in & saved activity (Firebase Auth + Firestore)
+
+The landing page and **Putaran Roda** (`/wheel`) include **Masuk / Log in** (email + password, Google, or new account). While signed in, each wheel animation cycle (throttled to about once every 4 seconds) writes a row under `users/{uid}/records` in **Cloud Firestore**.
+
+**One-time Firebase console setup**
+
+1. Enable **Authentication** → Sign-in methods: **Email/Password** and **Google** (turn Google on, then choose a support email). Under **Settings** → **Authorized domains**, add `localhost` (for dev) and your production host (e.g. `cognizowheel.web.app`).
+2. Create the **Firestore** database (production mode is fine; access is enforced by `firestore.rules`).
+3. Deploy rules with: `firebase deploy --only firestore` (or use `npm run deploy`, which deploys hosting + Firestore).

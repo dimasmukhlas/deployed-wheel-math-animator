@@ -8,10 +8,11 @@ const root = join(__dirname, "..");
 
 const shapeIndex = join(root, "public", "shape", "index.html");
 const fractionIndex = join(root, "public", "fraction", "index.html");
+const spongeIndex = join(root, "public", "sponge", "index.html");
 
-if (!existsSync(shapeIndex) || !existsSync(fractionIndex)) {
-  console.info("[cognizo] Building Cognizo Shape & Pecahan Seru into public/ (first run or after clean)…");
+if (!existsSync(shapeIndex) || !existsSync(fractionIndex) || !existsSync(spongeIndex)) {
+  console.info("[cognizo] Building sub-apps (shape, fraction, sponge) into public/ (first run or after clean)…");
   execSync("node scripts/build-subapps.mjs", { cwd: root, stdio: "inherit" });
 } else {
-  console.info("[cognizo] Sub-apps found in public/shape & public/fraction — skip build.");
+  console.info("[cognizo] Sub-apps found in public/shape, public/fraction, public/sponge — skip build.");
 }

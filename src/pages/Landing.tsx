@@ -12,9 +12,13 @@ import {
   BookOpen,
   Calculator,
   Leaf,
+  Languages,
 } from "lucide-react";
 import { PopularQuestionsSection } from "@/components/PopularQuestionsSection";
 import { LearningPathsSection } from "@/components/LearningPathsSection";
+import { UserAuthButton } from "@/components/auth/UserAuthButton";
+import { LoginExperienceNudge } from "@/components/auth/LoginExperienceNudge";
+import { RecentRecordsCard } from "@/components/auth/RecentRecordsCard";
 import type { LandingLang } from "@/lib/landing-lang";
 
 const LANG_KEY = "cognizo-landing-lang";
@@ -42,6 +46,7 @@ function buildActivities(t: (key: keyof typeof strings.en.activities) => { title
     a("wheel", "/wheel", true, Circle, "from-sky-500/20 to-teal-500/10 border-primary/30"),
     a("shape", "/shape/", false, Shapes, "from-violet-500/20 to-fuchsia-500/10 border-accent/30"),
     a("fraction", "/fraction/", false, PieChart, "from-amber-500/20 to-orange-500/10 border-secondary/40"),
+    a("spongebob", "/sponge/", false, Languages, "from-cyan-500/20 to-teal-500/10 border-cyan-500/35"),
   ];
 }
 
@@ -185,6 +190,11 @@ const strings = {
         title: "Fraction fun",
         description: "Fractions with animations and quizzes — parts, wholes, and proportion.",
       },
+      spongebob: {
+        title: "SpongeBob English",
+        description:
+          "English and Indonesian language practice — Bikini Bottom quizzes and interactive simulations.",
+      },
     },
   },
   id: {
@@ -326,6 +336,11 @@ const strings = {
         title: "Pecahan Seru",
         description: "Pecahan dengan animasi dan kuis — bagian, keseluruhan, dan perbandingan.",
       },
+      spongebob: {
+        title: "SpongeBob English",
+        description:
+          "Latihan bahasa Inggris dan Indonesia — kuis interaktif bertema Bikini Bottom.",
+      },
     },
   },
 } as const;
@@ -375,7 +390,10 @@ const Landing = () => {
 
   return (
     <div className="min-h-screen pb-20 px-4">
-      <header className="pt-8 md:pt-12 pb-8 text-center max-w-3xl mx-auto space-y-4">
+      <div className="max-w-5xl mx-auto flex justify-end pt-4 md:pt-6">
+        <UserAuthButton lang={lang} />
+      </div>
+      <header className="pt-4 md:pt-8 pb-8 text-center max-w-3xl mx-auto space-y-4">
         <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
           <span className="text-sm text-muted-foreground font-medium">{t.langLabel}</span>
           <Tabs value={lang} onValueChange={(v) => setLanguage(v as LandingLang)}>
@@ -404,6 +422,8 @@ const Landing = () => {
         </p>
       </header>
 
+      <RecentRecordsCard lang={lang} />
+
       {/* Interactive games — first for a clean, focused top */}
       <section id="games" className="max-w-4xl mx-auto mb-4">
         <div className="text-center mb-8">
@@ -417,7 +437,7 @@ const Landing = () => {
           </p>
         </div>
 
-        <div className="grid gap-5 md:gap-6 md:grid-cols-3">
+        <div className="grid gap-5 md:gap-6 sm:grid-cols-2 lg:grid-cols-4">
         {activities.map((item) => {
           const Icon = item.icon;
           return (
@@ -445,7 +465,14 @@ const Landing = () => {
                     {item.internal ? (
                       <Link to={item.href}>{t.start}</Link>
                     ) : (
-                      <a href={item.href}>{t.start}</a>
+                      <a
+                        href={item.href}
+                        {...(item.href.startsWith("http://") || item.href.startsWith("https://")
+                          ? { target: "_blank" as const, rel: "noopener noreferrer" }
+                          : {})}
+                      >
+                        {t.start}
+                      </a>
                     )}
                   </Button>
                 </CardContent>
@@ -486,6 +513,8 @@ const Landing = () => {
       <div className="max-w-5xl mx-auto mt-6 border-t border-border/40 pt-10">
         <PopularQuestionsSection lang={lang} />
       </div>
+
+      <LoginExperienceNudge lang={lang} />
     </div>
   );
 };

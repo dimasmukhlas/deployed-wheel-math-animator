@@ -5,11 +5,11 @@ import { componentTagger } from "lovable-tagger";
 
 /**
  * Vite serves `public/shape/index.html` at `/shape/index.html`, not `/shape/`.
- * This rewrites `/shape`, `/shape/`, and client routes to `index.html` while
- * leaving `/shape/assets/*` and other static files alone (dev + preview).
+ * This rewrites `/shape`, `/fraction`, `/sponge`, and nested client routes to each
+ * sub-app `index.html` while leaving `/…/assets/*` static files alone (dev + preview).
  */
 function subappSpaFallback(): Plugin {
-  const bases = ["/shape", "/fraction"] as const;
+  const bases = ["/shape", "/fraction", "/sponge"] as const;
 
   const middleware = (req: { url?: string }, _res: unknown, next: () => void) => {
     const raw = req.url ?? "";
