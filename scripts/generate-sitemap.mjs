@@ -16,9 +16,9 @@ const SITE_URL = (process.env.SITE_URL || "https://cognizowheel.web.app").replac
 const routes = [
   { path: "/", changefreq: "weekly", priority: "1.0" },
   { path: "/wheel", changefreq: "weekly", priority: "0.9" },
-  { path: "/shape/", changefreq: "weekly", priority: "0.8" },
-  { path: "/fraction/", changefreq: "weekly", priority: "0.8" },
-  { path: "/sponge/", changefreq: "weekly", priority: "0.8" },
+  { path: "/wheel/shape", changefreq: "weekly", priority: "0.8" },
+  { path: "/wheel/fraction", changefreq: "weekly", priority: "0.8" },
+  { path: "/wheel/sponge", changefreq: "weekly", priority: "0.8" },
 ];
 
 const lastmod = new Date().toISOString().split("T")[0];

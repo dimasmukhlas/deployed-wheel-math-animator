@@ -1,0 +1,124 @@
+@import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;600;700;800&family=Nunito:wght@400;600;700;800&display=swap');
+
+@layer base {
+  .subapp-sponge {
+    --background: 195 100% 40%;
+    --foreground: 0 0% 100%;
+
+    --card: 48 100% 50%;
+    --card-foreground: 30 80% 15%;
+
+    --popover: 48 100% 50%;
+    --popover-foreground: 30 80% 15%;
+
+    --primary: 48 100% 50%;
+    --primary-foreground: 30 80% 15%;
+
+    --secondary: 195 90% 50%;
+    --secondary-foreground: 0 0% 100%;
+
+    --muted: 195 60% 30%;
+    --muted-foreground: 195 20% 80%;
+
+    --accent: 340 80% 55%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 195 60% 50%;
+    --input: 195 60% 50%;
+    --ring: 48 100% 50%;
+
+    --radius: 1rem;
+
+    --spongebob-yellow: 48 100% 50%;
+    --ocean-blue: 195 100% 40%;
+    --ocean-light: 180 70% 55%;
+    --sandy: 42 60% 70%;
+    --patrick-pink: 340 80% 65%;
+    --correct-green: 145 70% 45%;
+    --wrong-red: 0 75% 55%;
+
+    --sidebar-background: 195 100% 35%;
+    --sidebar-foreground: 0 0% 100%;
+    --sidebar-primary: 48 100% 50%;
+    --sidebar-primary-foreground: 30 80% 15%;
+    --sidebar-accent: 195 80% 45%;
+    --sidebar-accent-foreground: 0 0% 100%;
+    --sidebar-border: 195 60% 50%;
+    --sidebar-ring: 48 100% 50%;
+  }
+}
+
+@layer base {
+  .subapp-sponge * {
+    @apply border-border;
+  }
+
+  .subapp-sponge {
+    @apply bg-background text-foreground font-spongeBody;
+    font-family: 'Nunito', sans-serif;
+  }
+  .subapp-sponge h1, .subapp-sponge h2, .subapp-sponge h3, .subapp-sponge h4, .subapp-sponge h5, .subapp-sponge h6 {
+    font-family: 'Baloo 2', cursive;
+  }
+}
+
+@layer utilities {
+  .font-display {
+    font-family: 'Baloo 2', cursive;
+  }
+  .font-body {
+    font-family: 'Nunito', sans-serif;
+  }
+}
+
+@keyframes bubble-float {
+  0% { transform: translateY(100vh) scale(0.5); opacity: 0; }
+  10% { opacity: 0.6; }
+  90% { opacity: 0.3; }
+  100% { transform: translateY(-10vh) scale(1.2); opacity: 0; }
+}
+
+@keyframes wiggle {
+  0%, 100% { transform: rotate(-3deg); }
+  50% { transform: rotate(3deg); }
+}
+
+@keyframes pop-in {
+  0% { transform: scale(0); opacity: 0; }
+  60% { transform: scale(1.15); }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+@keyframes bounce-in {
+  0% { transform: scale(0.3); opacity: 0; }
+  50% { transform: scale(1.08); }
+  70% { transform: scale(0.95); }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-8px); }
+  40% { transform: translateX(8px); }
+  60% { transform: translateX(-5px); }
+  80% { transform: translateX(5px); }
+}
+
+.animate-bubble {
+  animation: bubble-float linear infinite;
+}
+.animate-wiggle {
+  animation: wiggle 0.5s ease-in-out;
+}
+.animate-pop-in {
+  animation: pop-in 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
+}
+.animate-bounce-in {
+  animation: bounce-in 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
+}
+.animate-shake {
+  animation: shake 0.5s ease-in-out;
+}

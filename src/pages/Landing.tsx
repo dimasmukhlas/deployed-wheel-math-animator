@@ -44,9 +44,9 @@ function buildActivities(t: (key: keyof typeof strings.en.activities) => { title
   });
   return [
     a("wheel", "/wheel", true, Circle, "from-sky-500/20 to-teal-500/10 border-primary/30"),
-    a("shape", "/shape/", false, Shapes, "from-violet-500/20 to-fuchsia-500/10 border-accent/30"),
-    a("fraction", "/fraction/", false, PieChart, "from-amber-500/20 to-orange-500/10 border-secondary/40"),
-    a("spongebob", "/sponge/", false, Languages, "from-cyan-500/20 to-teal-500/10 border-cyan-500/35"),
+    a("shape", "/wheel/shape", true, Shapes, "from-violet-500/20 to-fuchsia-500/10 border-accent/30"),
+    a("fraction", "/wheel/fraction", true, PieChart, "from-amber-500/20 to-orange-500/10 border-secondary/40"),
+    a("spongebob", "/wheel/sponge", true, Languages, "from-cyan-500/20 to-teal-500/10 border-cyan-500/35"),
   ];
 }
 

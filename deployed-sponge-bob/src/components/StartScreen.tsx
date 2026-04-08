@@ -1,4 +1,4 @@
-import type { QuizCategory, QuizLevel } from "@/data/quizQuestions";
+import type { QuizCategory, QuizLevel } from "@sponge/data/quizQuestions";
 
 interface StartScreenProps {
   onStart: () => void;
@@ -50,14 +50,14 @@ const StartScreen = ({ onStart, category, level, onBack, studentName }: StartScr
     <div className="w-full max-w-lg mx-auto text-center animate-bounce-in">
       <div className="bg-primary rounded-3xl p-8 md:p-10 shadow-2xl border-4 border-primary-foreground/20">
         <div className="text-7xl mb-4">🧽</div>
-        <p className="font-display text-lg text-primary-foreground/70 mb-1">Ready, {studentName}?</p>
-        <div className="font-display text-sm text-primary-foreground/60 bg-primary-foreground/10 inline-block px-3 py-1 rounded-full mb-3">
+        <p className="font-spongeDisplay text-lg text-primary-foreground/70 mb-1">Ready, {studentName}?</p>
+        <div className="font-spongeDisplay text-sm text-primary-foreground/60 bg-primary-foreground/10 inline-block px-3 py-1 rounded-full mb-3">
           Level {level}
         </div>
-        <h1 className="font-display text-3xl md:text-4xl text-primary-foreground mb-1">
+        <h1 className="font-spongeDisplay text-3xl md:text-4xl text-primary-foreground mb-1">
           {c.emoji} {c.title}
         </h1>
-        <p className="font-body text-base text-primary-foreground/70 mb-6">{c.desc}</p>
+        <p className="font-spongeBody text-base text-primary-foreground/70 mb-6">{c.desc}</p>
 
         <div className="flex justify-center gap-4 mb-6 text-4xl">
           {["⭐", "🐙", "⭐", "🦀", "⭐"].map((e, i) => (
@@ -68,11 +68,11 @@ const StartScreen = ({ onStart, category, level, onBack, studentName }: StartScr
         <div className="flex flex-col gap-3">
           <button
             onClick={onStart}
-            className="bg-accent text-accent-foreground font-display text-2xl px-10 py-5 rounded-xl shadow-lg hover:scale-110 active:scale-95 transition-transform border-2 border-foreground/10"
+            className="bg-accent text-accent-foreground font-spongeDisplay text-2xl px-10 py-5 rounded-xl shadow-lg hover:scale-110 active:scale-95 transition-transform border-2 border-foreground/10"
           >
             🎮 Start Quiz!
           </button>
-          <button onClick={onBack} className="font-body text-primary-foreground/60 hover:text-primary-foreground text-sm transition-colors">
+          <button onClick={onBack} className="font-spongeBody text-primary-foreground/60 hover:text-primary-foreground text-sm transition-colors">
             ← Back to menu
           </button>
         </div>

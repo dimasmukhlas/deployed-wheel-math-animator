@@ -35,14 +35,14 @@ const ResultsScreen = ({ score, total, onRestart, onBackToMenu, studentName }: R
     <div className="w-full max-w-lg mx-auto text-center animate-bounce-in">
       <div className="bg-primary rounded-3xl p-8 md:p-10 shadow-2xl border-4 border-primary-foreground/20">
         <div className="text-7xl mb-4">{msg.emoji}</div>
-        <h1 className="font-display text-3xl md:text-4xl text-primary-foreground mb-1">
+        <h1 className="font-spongeDisplay text-3xl md:text-4xl text-primary-foreground mb-1">
           Congrats, {studentName}! 🎉
         </h1>
-        <p className="font-body text-lg text-primary-foreground/80 mb-6">{msg.text}</p>
+        <p className="font-spongeBody text-lg text-primary-foreground/80 mb-6">{msg.text}</p>
 
         <div className="w-36 h-36 mx-auto rounded-full bg-primary-foreground/20 flex flex-col items-center justify-center mb-6 border-4 border-primary-foreground/30">
-          <span className="font-display text-5xl text-primary-foreground">{score}</span>
-          <span className="font-body text-sm text-primary-foreground/70">out of {total}</span>
+          <span className="font-spongeDisplay text-5xl text-primary-foreground">{score}</span>
+          <span className="font-spongeBody text-sm text-primary-foreground/70">out of {total}</span>
         </div>
 
         <div className="flex justify-center gap-1 mb-6 text-3xl">
@@ -54,10 +54,10 @@ const ResultsScreen = ({ score, total, onRestart, onBackToMenu, studentName }: R
         </div>
 
         <div className="flex flex-col gap-3">
-          <button onClick={onRestart} className="bg-accent text-accent-foreground font-display text-xl px-8 py-4 rounded-xl shadow-lg hover:scale-105 active:scale-95 transition-transform border-2 border-foreground/10">
+          <button onClick={onRestart} className="bg-accent text-accent-foreground font-spongeDisplay text-xl px-8 py-4 rounded-xl shadow-lg hover:scale-105 active:scale-95 transition-transform border-2 border-foreground/10">
             🔄 Play Again!
           </button>
-          <button onClick={onBackToMenu} className="font-body text-primary-foreground/60 hover:text-primary-foreground text-sm transition-colors">
+          <button onClick={onBackToMenu} className="font-spongeBody text-primary-foreground/60 hover:text-primary-foreground text-sm transition-colors">
             ← Back to menu
           </button>
         </div>

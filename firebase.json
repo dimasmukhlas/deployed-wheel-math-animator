@@ -6,9 +6,12 @@
     "public": "dist",
     "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
     "redirects": [
-      { "source": "/shape", "destination": "/shape/", "type": 301 },
-      { "source": "/fraction", "destination": "/fraction/", "type": 301 },
-      { "source": "/sponge", "destination": "/sponge/", "type": 301 }
+      { "source": "/shape", "destination": "/wheel/shape", "type": 301 },
+      { "source": "/shape/**", "destination": "/wheel/shape", "type": 301 },
+      { "source": "/fraction", "destination": "/wheel/fraction", "type": 301 },
+      { "source": "/fraction/**", "destination": "/wheel/fraction", "type": 301 },
+      { "source": "/sponge", "destination": "/wheel/sponge", "type": 301 },
+      { "source": "/sponge/**", "destination": "/wheel/sponge", "type": 301 }
     ],
     "rewrites": [
       {

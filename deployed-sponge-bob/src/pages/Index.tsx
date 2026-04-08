@@ -1,11 +1,11 @@
 import { useState, useCallback } from "react";
-import underwaterBg from "@/assets/underwater-bg.png";
-import Bubbles from "@/components/Bubbles";
-import StartScreen from "@/components/StartScreen";
-import QuizCard from "@/components/QuizCard";
-import ProgressBar from "@/components/ProgressBar";
-import ResultsScreen from "@/components/ResultsScreen";
-import { getQuestions, type QuizCategory, type QuizLevel, type QuizQuestion } from "@/data/quizQuestions";
+import underwaterBg from "@sponge/assets/underwater-bg.png";
+import Bubbles from "@sponge/components/Bubbles";
+import StartScreen from "@sponge/components/StartScreen";
+import QuizCard from "@sponge/components/QuizCard";
+import ProgressBar from "@sponge/components/ProgressBar";
+import ResultsScreen from "@sponge/components/ResultsScreen";
+import { getQuestions, type QuizCategory, type QuizLevel, type QuizQuestion } from "@sponge/data/quizQuestions";
 
 type Screen = "name" | "menu" | "start" | "quiz" | "results";
 
@@ -26,14 +26,14 @@ const LevelCard = ({ level, title, desc, emoji, spongebob, colorClass, fgClass, 
     className={`${colorClass} rounded-2xl p-4 md:p-5 shadow-2xl border-4 border-foreground/10 hover:scale-105 active:scale-95 transition-transform text-left relative overflow-hidden`}
   >
     {spongebob && (
-      <div className={`absolute top-2 right-2 text-xs font-display bg-foreground/20 ${fgClass} px-2 py-1 rounded-full`}>🧽 SpongeBob!</div>
+      <div className={`absolute top-2 right-2 text-xs font-spongeDisplay bg-foreground/20 ${fgClass} px-2 py-1 rounded-full`}>🧽 SpongeBob!</div>
     )}
     <div className="flex items-center gap-2 mb-1">
       <span className="text-2xl">{emoji}</span>
-      <span className={`font-display ${fgClass} bg-foreground/10 px-2 py-0.5 rounded-full text-xs`}>Level {level}</span>
+      <span className={`font-spongeDisplay ${fgClass} bg-foreground/10 px-2 py-0.5 rounded-full text-xs`}>Level {level}</span>
     </div>
-    <h2 className={`font-display text-lg md:text-xl ${fgClass} mb-0.5`}>{title}</h2>
-    <p className={`font-body text-xs ${fgClass} opacity-70`}>{desc}</p>
+    <h2 className={`font-spongeDisplay text-lg md:text-xl ${fgClass} mb-0.5`}>{title}</h2>
+    <p className={`font-spongeBody text-xs ${fgClass} opacity-70`}>{desc}</p>
   </button>
 );
 
@@ -110,10 +110,10 @@ const Index = () => {
           <div className="w-full max-w-md mx-auto text-center animate-bounce-in">
             <div className="bg-primary rounded-3xl p-8 md:p-10 shadow-2xl border-4 border-primary-foreground/20">
               <div className="text-7xl mb-4">🧽</div>
-              <h1 className="font-display text-3xl md:text-4xl text-primary-foreground mb-2">
+              <h1 className="font-spongeDisplay text-3xl md:text-4xl text-primary-foreground mb-2">
                 Ahoy there!
               </h1>
-              <p className="font-body text-base text-primary-foreground/70 mb-6">
+              <p className="font-spongeBody text-base text-primary-foreground/70 mb-6">
                 What's your name, captain?
               </p>
               <input
@@ -122,13 +122,13 @@ const Index = () => {
                 onChange={(e) => setNameInput(e.target.value)}
                 onKeyDown={(e) => e.key === "Enter" && handleNameSubmit()}
                 placeholder="Type your name..."
-                className="w-full px-5 py-4 rounded-xl text-lg font-body font-bold text-center bg-primary-foreground/20 text-primary-foreground placeholder:text-primary-foreground/40 border-2 border-primary-foreground/20 focus:border-primary-foreground/50 focus:outline-none mb-4"
+                className="w-full px-5 py-4 rounded-xl text-lg font-spongeBody font-bold text-center bg-primary-foreground/20 text-primary-foreground placeholder:text-primary-foreground/40 border-2 border-primary-foreground/20 focus:border-primary-foreground/50 focus:outline-none mb-4"
                 autoFocus
               />
               <button
                 onClick={handleNameSubmit}
                 disabled={!nameInput.trim()}
-                className="bg-accent text-accent-foreground font-display text-xl px-10 py-4 rounded-xl shadow-lg hover:scale-105 active:scale-95 transition-transform border-2 border-foreground/10 disabled:opacity-50 disabled:hover:scale-100"
+                className="bg-accent text-accent-foreground font-spongeDisplay text-xl px-10 py-4 rounded-xl shadow-lg hover:scale-105 active:scale-95 transition-transform border-2 border-foreground/10 disabled:opacity-50 disabled:hover:scale-100"
               >
                 🚀 Let's Go!
               </button>
@@ -139,17 +139,17 @@ const Index = () => {
         {screen === "menu" && (
           <div className="w-full max-w-4xl mx-auto text-center animate-bounce-in">
             <div className="text-5xl mb-2">🧽</div>
-            <h1 className="font-display text-2xl md:text-4xl text-foreground mb-1 drop-shadow-lg">
+            <h1 className="font-spongeDisplay text-2xl md:text-4xl text-foreground mb-1 drop-shadow-lg">
               Welcome, {studentName}! 🌟
             </h1>
-            <p className="font-body text-base text-foreground/80 mb-6 drop-shadow">
+            <p className="font-spongeBody text-base text-foreground/80 mb-6 drop-shadow">
               Choose your quiz adventure!
             </p>
 
             {/* Toddler Section */}
             <div className="mb-5">
-              <h3 className="font-display text-lg text-foreground mb-2 drop-shadow flex items-center justify-center gap-2">
-                🍼 Toddler <span className="text-sm font-body opacity-70">(Age 3)</span>
+              <h3 className="font-spongeDisplay text-lg text-foreground mb-2 drop-shadow flex items-center justify-center gap-2">
+                🍼 Toddler <span className="text-sm font-spongeBody opacity-70">(Age 3)</span>
               </h3>
               <div className="grid grid-cols-2 gap-3 max-w-2xl mx-auto">
                 <LevelCard level={1} title="Shapes & Colors" desc="Circles, squares, colors & counting" emoji="🔷" colorClass="bg-ocean-light" fgClass="text-foreground" onClick={() => handlePickQuiz("toddler", 1)} />
@@ -159,8 +159,8 @@ const Index = () => {
 
             {/* Pre-School Section */}
             <div className="mb-5">
-              <h3 className="font-display text-lg text-foreground mb-2 drop-shadow flex items-center justify-center gap-2">
-                👶 Pre-School <span className="text-sm font-body opacity-70">(Age 4+)</span>
+              <h3 className="font-spongeDisplay text-lg text-foreground mb-2 drop-shadow flex items-center justify-center gap-2">
+                👶 Pre-School <span className="text-sm font-spongeBody opacity-70">(Age 4+)</span>
               </h3>
               <div className="grid grid-cols-2 gap-3 max-w-2xl mx-auto">
                 <LevelCard level={1} title="Basics" desc="Colors, shapes, animals & counting" emoji="🧸" colorClass={san} fgClass={sanFg} onClick={() => handlePickQuiz("preschool", 1)} />
@@ -170,8 +170,8 @@ const Index = () => {
 
             {/* English Section */}
             <div className="mb-5">
-              <h3 className="font-display text-lg text-foreground mb-2 drop-shadow flex items-center justify-center gap-2">
-                🇬🇧 English <span className="text-sm font-body opacity-70">(2nd Grade)</span>
+              <h3 className="font-spongeDisplay text-lg text-foreground mb-2 drop-shadow flex items-center justify-center gap-2">
+                🇬🇧 English <span className="text-sm font-spongeBody opacity-70">(2nd Grade)</span>
               </h3>
               <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
                 <LevelCard level={1} title="Basic" desc="Vocabulary & grammar" emoji="📚" colorClass={pri} fgClass={priFg} onClick={() => handlePickQuiz("english", 1)} />
@@ -185,8 +185,8 @@ const Index = () => {
 
             {/* Indonesian Section */}
             <div>
-              <h3 className="font-display text-lg text-foreground mb-2 drop-shadow flex items-center justify-center gap-2">
-                🇮🇩 Indonesian <span className="text-sm font-body opacity-70">(Bahasa)</span>
+              <h3 className="font-spongeDisplay text-lg text-foreground mb-2 drop-shadow flex items-center justify-center gap-2">
+                🇮🇩 Indonesian <span className="text-sm font-spongeBody opacity-70">(Bahasa)</span>
               </h3>
               <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
                 <LevelCard level={1} title="Dasar" desc="Basic words & phrases" emoji="🌴" colorClass={acc} fgClass={accFg} onClick={() => handlePickQuiz("indonesian", 1)} />
@@ -200,8 +200,8 @@ const Index = () => {
 
             {/* Spanish Section */}
             <div className="mb-5">
-              <h3 className="font-display text-lg text-foreground mb-2 drop-shadow flex items-center justify-center gap-2">
-                🇪🇸 Spanish <span className="text-sm font-body opacity-70">(Español)</span>
+              <h3 className="font-spongeDisplay text-lg text-foreground mb-2 drop-shadow flex items-center justify-center gap-2">
+                🇪🇸 Spanish <span className="text-sm font-spongeBody opacity-70">(Español)</span>
               </h3>
               <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
                 <LevelCard level={1} title="Básico" desc="Basic words & phrases" emoji="🌮" colorClass="bg-sandy" fgClass="text-primary-foreground" onClick={() => handlePickQuiz("spanish", 1)} />

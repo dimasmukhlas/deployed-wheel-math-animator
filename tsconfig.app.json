@@ -23,8 +23,16 @@
 
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["./src/*"],
+      "@sponge/*": ["./deployed-sponge-bob/src/*"],
+      "@shape/*": ["./deployed-shape-explorer-main/src/*"],
+      "@fraction/*": ["./deployed-fraction-fun-animated-main/src/*"]
     }
   },
-  "include": ["src"]
+  "include": [
+    "src",
+    "deployed-sponge-bob/src",
+    "deployed-shape-explorer-main/src",
+    "deployed-fraction-fun-animated-main/src"
+  ]
 }

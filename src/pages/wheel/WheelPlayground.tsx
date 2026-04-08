@@ -4,16 +4,14 @@ import { WheelAnimation } from "@/components/WheelAnimation";
 import { FormulaCard } from "@/components/FormulaCard";
 import { SliderControl } from "@/components/SliderControl";
 import { Button } from "@/components/ui/button";
-import { Link } from "react-router-dom";
-import { Circle, Route, Play, Pause, RotateCcw, Globe, Home } from "lucide-react";
+import { Circle, Route, Play, Pause, RotateCcw, Globe } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
-import { UserAuthButton } from "@/components/auth/UserAuthButton";
 import { LoginExperienceNudge } from "@/components/auth/LoginExperienceNudge";
 import { saveWheelRecord } from "@/lib/records";
 import { incrementGuestWheelSessions } from "@/lib/guest-progress";
 import type { LandingLang } from "@/lib/landing-lang";
 import { useSoundEffects } from "@/hooks/useSoundEffects";
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 const explanations = {
   en: {
@@ -27,7 +25,8 @@ const explanations = {
     step2Formula: "Rotations = Distance ÷ Circumference",
     step2Note: "Make sure both values use the same unit (cm or m).",
     conclusionTitle: "✅ Conclusion",
-    conclusionContent: "The number of rotations tells us how many complete turns the wheel makes to travel the given distance. A larger radius means fewer rotations, while a smaller radius means more rotations for the same distance.",
+    conclusionContent:
+      "The number of rotations tells us how many complete turns the wheel makes to travel the given distance. A larger radius means fewer rotations, while a smaller radius means more rotations for the same distance.",
   },
   id: {
     title: "💡 Penjelasan",
@@ -40,7 +39,8 @@ const explanations = {
     step2Formula: "Putaran = Jarak ÷ Keliling",
     step2Note: "Pastikan kedua nilai menggunakan satuan yang sama (cm atau m).",
     conclusionTitle: "✅ Kesimpulan",
-    conclusionContent: "Jumlah putaran menunjukkan berapa kali roda berputar penuh untuk menempuh jarak tertentu. Jari-jari yang lebih besar berarti putaran lebih sedikit, sedangkan jari-jari yang lebih kecil berarti putaran lebih banyak untuk jarak yang sama.",
+    conclusionContent:
+      "Jumlah putaran menunjukkan berapa kali roda berputar penuh untuk menempuh jarak tertentu. Jari-jari yang lebih besar berarti putaran lebih sedikit, sedangkan jari-jari yang lebih kecil berarti putaran lebih banyak untuk jarak yang sama.",
   },
 };
 
@@ -52,9 +52,10 @@ const wheelPresets = [
   { name: "🚚 Truk", nameEn: "🚚 Truck", radius: 55, description: "Roda truk kontainer" },
 ];
 
-const Index = () => {
-  const [radius, setRadius] = useState(35); // cm
-  const [distance, setDistance] = useState(10); // meters
+/** Wheel rotation lesson (embedded in Cognizo hub). */
+const WheelPlayground = () => {
+  const [radius, setRadius] = useState(35);
+  const [distance, setDistance] = useState(10);
   const [isAnimating, setIsAnimating] = useState(false);
   const [language, setLanguage] = useState<"en" | "id">("id");
   const { user } = useAuth();
@@ -62,9 +63,8 @@ const Index = () => {
   const lastGuestSessionAt = useRef(0);
   const { playWheelSound, playCelebrationSound, playStartSound } = useSoundEffects();
 
-  // Calculate circumference and rotations
-  const circumference = 2 * Math.PI * radius; // in cm
-  const distanceInCm = distance * 100; // convert meters to cm
+  const circumference = 2 * Math.PI * radius;
+  const distanceInCm = distance * 100;
   const rotations = distanceInCm / circumference;
 
   const handleStartAnimation = () => {
@@ -104,19 +104,9 @@ const Index = () => {
   const t = explanations[language];
 
   return (
-    <div className="min-h-screen pb-12">
-      {/* Header */}
-      <header className="pt-8 pb-6 px-4">
+    <div className="pb-12">
+      <header className="pt-6 pb-6 px-4">
         <div className="max-w-4xl mx-auto text-center">
-          <div className="flex flex-wrap items-center justify-between gap-3 mb-3">
-            <Button variant="ghost" size="sm" className="gap-2 text-muted-foreground" asChild>
-              <Link to="/">
-                <Home className="w-4 h-4" />
-                Beranda
-              </Link>
-            </Button>
-            <UserAuthButton lang={language as LandingLang} />
-          </div>
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary text-sm font-medium mb-4">
             <Circle className="w-4 h-4" />
             Pembelajaran Interaktif
@@ -131,7 +121,6 @@ const Index = () => {
       </header>
 
       <main className="max-w-4xl mx-auto px-4 space-y-6">
-        {/* Animation Section */}
         <section>
           <WheelAnimation
             radius={radius}
@@ -141,8 +130,7 @@ const Index = () => {
             onCycleComplete={handleCycleComplete}
             playWheelSound={playWheelSound}
           />
-          
-          {/* Animation Controls */}
+
           <div className="flex justify-center gap-3 mt-4">
             <Button
               onClick={handleStartAnimation}
@@ -161,19 +149,13 @@ const Index = () => {
                 </>
               )}
             </Button>
-            <Button
-              onClick={handleReset}
-              variant="outline"
-              size="lg"
-              className="gap-2"
-            >
+            <Button onClick={handleReset} variant="outline" size="lg" className="gap-2">
               <RotateCcw className="w-5 h-5" />
               Reset
             </Button>
           </div>
         </section>
 
-        {/* Wheel Presets */}
         <section className="glass-card rounded-2xl p-4">
           <h3 className="text-sm font-semibold text-muted-foreground mb-3">
             {language === "id" ? "🎯 Pilih Jenis Roda:" : "🎯 Select Wheel Type:"}
@@ -186,9 +168,7 @@ const Index = () => {
                 size="sm"
                 onClick={() => setRadius(preset.radius)}
                 className={`transition-all duration-200 hover:scale-105 ${
-                  radius === preset.radius 
-                    ? "bg-gradient-primary text-primary-foreground shadow-soft" 
-                    : ""
+                  radius === preset.radius ? "bg-gradient-primary text-primary-foreground shadow-soft" : ""
                 }`}
               >
                 {language === "id" ? preset.name : preset.nameEn}
@@ -198,7 +178,6 @@ const Index = () => {
           </div>
         </section>
 
-        {/* Controls Section */}
         <section className="grid md:grid-cols-2 gap-4">
           <SliderControl
             label="Jari-jari Roda (r)"
@@ -224,7 +203,6 @@ const Index = () => {
           />
         </section>
 
-        {/* Formula & Calculation Section */}
         <section>
           <FormulaCard
             radius={radius}
@@ -234,7 +212,6 @@ const Index = () => {
           />
         </section>
 
-        {/* Info Section with Language Toggle */}
         <section className="glass-card rounded-2xl p-6">
           <div className="flex items-center justify-between mb-4">
             <h3 className="text-xl font-bold">{t.title}</h3>
@@ -253,27 +230,20 @@ const Index = () => {
           </div>
 
           <div className="space-y-5">
-            {/* Step 1 */}
             <div className="bg-muted/40 rounded-xl p-4 border-l-4 border-primary">
               <h4 className="font-semibold text-foreground mb-2">{t.step1Title}</h4>
               <p className="text-muted-foreground text-sm mb-2">{t.step1Content}</p>
-              <code className="bg-muted px-3 py-1.5 rounded text-sm font-mono block w-fit">
-                {t.step1Formula}
-              </code>
+              <code className="bg-muted px-3 py-1.5 rounded text-sm font-mono block w-fit">{t.step1Formula}</code>
               <p className="text-muted-foreground text-xs mt-2 italic">{t.step1Note}</p>
             </div>
 
-            {/* Step 2 */}
             <div className="bg-muted/40 rounded-xl p-4 border-l-4 border-secondary">
               <h4 className="font-semibold text-foreground mb-2">{t.step2Title}</h4>
               <p className="text-muted-foreground text-sm mb-2">{t.step2Content}</p>
-              <code className="bg-muted px-3 py-1.5 rounded text-sm font-mono block w-fit">
-                {t.step2Formula}
-              </code>
+              <code className="bg-muted px-3 py-1.5 rounded text-sm font-mono block w-fit">{t.step2Formula}</code>
               <p className="text-muted-foreground text-xs mt-2 italic">{t.step2Note}</p>
             </div>
 
-            {/* Conclusion */}
             <div className="bg-gradient-primary/10 rounded-xl p-4 border border-primary/20">
               <h4 className="font-semibold text-foreground mb-2">{t.conclusionTitle}</h4>
               <p className="text-muted-foreground text-sm">{t.conclusionContent}</p>
@@ -287,4 +257,4 @@ const Index = () => {
   );
 };
 
-export default Index;
+export default WheelPlayground;

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import type { QuizQuestion } from "@/data/quizQuestions";
+import type { QuizQuestion } from "@sponge/data/quizQuestions";
 
 interface QuizCardProps {
   question: QuizQuestion;
@@ -48,8 +48,8 @@ const QuizCard = ({ question, onAnswer }: QuizCardProps) => {
     <div className="w-full max-w-2xl mx-auto animate-bounce-in" key={question.id}>
       <div className="bg-primary rounded-2xl p-6 md:p-8 mb-6 shadow-2xl border-4 border-primary-foreground/20">
         <div className="flex items-start gap-3">
-          <span className="font-display text-3xl md:text-4xl">🧽</span>
-          <h2 className="font-display text-xl md:text-2xl text-primary-foreground leading-snug">
+          <span className="font-spongeDisplay text-3xl md:text-4xl">🧽</span>
+          <h2 className="font-spongeDisplay text-xl md:text-2xl text-primary-foreground leading-snug">
             {question.question}
           </h2>
         </div>
@@ -69,11 +69,11 @@ const QuizCard = ({ question, onAnswer }: QuizCardProps) => {
               flex items-center gap-3
             `}
           >
-            <span className="w-9 h-9 rounded-full bg-foreground/20 flex items-center justify-center font-display text-lg text-foreground shrink-0">
+            <span className="w-9 h-9 rounded-full bg-foreground/20 flex items-center justify-center font-spongeDisplay text-lg text-foreground shrink-0">
               {optionLabels[index]}
             </span>
             <span className="text-2xl shrink-0">{question.emojis[index]}</span>
-            <span className="font-body font-bold text-base md:text-lg text-foreground">
+            <span className="font-spongeBody font-bold text-base md:text-lg text-foreground">
               {option}
             </span>
             {showResult && index === question.correctIndex && (

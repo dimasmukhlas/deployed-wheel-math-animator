@@ -1,51 +1,11 @@
-import { defineConfig, type Plugin } from "vite";
+import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react-swc";
 import path from "path";
-import { componentTagger } from "lovable-tagger";
 
-/**
- * Vite serves `public/shape/index.html` at `/shape/index.html`, not `/shape/`.
- * This rewrites `/shape`, `/fraction`, `/sponge`, and nested client routes to each
- * sub-app `index.html` while leaving `/…/assets/*` static files alone (dev + preview).
- */
-function subappSpaFallback(): Plugin {
-  const bases = ["/shape", "/fraction", "/sponge"] as const;
-
-  const middleware = (req: { url?: string }, _res: unknown, next: () => void) => {
-    const raw = req.url ?? "";
-    const pathname = raw.split("?")[0] ?? "";
-    const query = raw.includes("?") ? "?" + raw.split("?")[1] : "";
-
-    for (const base of bases) {
-      if (pathname === base || pathname === `${base}/`) {
-        req.url = `${base}/index.html${query}`;
-        return next();
-      }
-      if (!pathname.startsWith(`${base}/`)) continue;
-      if (pathname.startsWith(`${base}/assets/`)) return next();
-      const last = pathname.split("/").filter(Boolean).pop() ?? "";
-      const looksLikeFile = last.includes(".") && last.length > 1;
-      if (looksLikeFile) return next();
-      req.url = `${base}/index.html${query}`;
-      return next();
-    }
-    next();
-  };
-
-  return {
-    name: "subapp-spa-fallback",
-    enforce: "pre",
-    configureServer(server) {
-      server.middlewares.use(middleware);
-    },
-    configurePreviewServer(server) {
-      server.middlewares.use(middleware);
-    },
-  };
-}
+const root = path.resolve(__dirname);
 
 // https://vitejs.dev/config/
-export default defineConfig(({ mode }) => ({
+export default defineConfig(() => ({
   server: {
     host: "::",
     port: 8080,
@@ -53,14 +13,18 @@ export default defineConfig(({ mode }) => ({
       overlay: false,
     },
   },
-  plugins: [
-    subappSpaFallback(),
-    react(),
-    mode === "development" && componentTagger(),
-  ].filter(Boolean),
+  plugins: [react()],
   resolve: {
+    // Sub-apps ship their own node_modules; without this, lazy chunks get a second React
+    // and hooks throw: Cannot read properties of null (reading 'useState').
+    dedupe: ["react", "react-dom"],
     alias: {
+      react: path.join(root, "node_modules/react"),
+      "react-dom": path.join(root, "node_modules/react-dom"),
       "@": path.resolve(__dirname, "./src"),
+      "@sponge": path.resolve(__dirname, "./deployed-sponge-bob/src"),
+      "@shape": path.resolve(__dirname, "./deployed-shape-explorer-main/src"),
+      "@fraction": path.resolve(__dirname, "./deployed-fraction-fun-animated-main/src"),
     },
   },
 }));

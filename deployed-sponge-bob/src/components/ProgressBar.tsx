@@ -10,10 +10,10 @@ const ProgressBar = ({ current, total, score }: ProgressBarProps) => {
   return (
     <div className="w-full max-w-2xl mx-auto mb-6">
       <div className="flex justify-between items-center mb-2">
-        <span className="font-display text-lg text-foreground">
+        <span className="font-spongeDisplay text-lg text-foreground">
           Question {current + 1} of {total}
         </span>
-        <span className="font-display text-lg text-primary px-3 py-1 bg-primary/20 rounded-full">
+        <span className="font-spongeDisplay text-lg text-primary px-3 py-1 bg-primary/20 rounded-full">
           ⭐ {score}
         </span>
       </div>
