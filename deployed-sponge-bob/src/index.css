@@ -127,3 +127,125 @@
 .animate-shake {
   animation: shake 0.5s ease-in-out;
 }
+
+/* Slowpoke-themed backdrop (Language lab variant) */
+@keyframes slowpoke-drift {
+  0%,
+  100% {
+    transform: translate(-50%, 0) translateY(0);
+  }
+  50% {
+    transform: translate(-50%, 0) translateY(-14px);
+  }
+}
+
+@keyframes slowpoke-drift-delayed {
+  0%,
+  100% {
+    transform: translateY(0) rotate(-2deg);
+  }
+  50% {
+    transform: translateY(-10px) rotate(3deg);
+  }
+}
+
+@keyframes slowpoke-glow {
+  0%,
+  100% {
+    opacity: 0.35;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.55;
+    transform: scale(1.06);
+  }
+}
+
+@keyframes slowpoke-glow-delayed {
+  0%,
+  100% {
+    opacity: 0.28;
+    transform: scale(1) translate(0, 0);
+  }
+  50% {
+    opacity: 0.48;
+    transform: scale(1.1) translate(8px, -6px);
+  }
+}
+
+@keyframes slowpoke-sparkle-rise {
+  0% {
+    transform: translateY(8vh) rotate(0deg) scale(0.7);
+    opacity: 0;
+  }
+  15% {
+    opacity: 0.5;
+  }
+  100% {
+    transform: translateY(-92vh) rotate(25deg) scale(1);
+    opacity: 0;
+  }
+}
+
+.animate-slowpoke-drift {
+  animation: slowpoke-drift 9s ease-in-out infinite;
+}
+
+.animate-slowpoke-drift-delayed {
+  animation: slowpoke-drift-delayed 11s ease-in-out infinite;
+}
+
+@keyframes slowpoke-drift-side {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-9px);
+  }
+}
+
+.animate-slowpoke-drift-side {
+  animation: slowpoke-drift-side 8s ease-in-out infinite;
+}
+
+.animate-slowpoke-glow {
+  animation: slowpoke-glow 12s ease-in-out infinite;
+}
+
+.animate-slowpoke-glow-delayed {
+  animation: slowpoke-glow-delayed 14s ease-in-out infinite;
+  animation-delay: -3s;
+}
+
+.animate-slowpoke-sparkle {
+  animation: slowpoke-sparkle-rise linear infinite;
+}
+
+/* Pokémon-style evolution swap on progress marker */
+@keyframes poke-evolve-pop {
+  0% {
+    transform: scale(0.65) rotate(-10deg);
+    opacity: 0;
+    filter: blur(6px);
+  }
+  60% {
+    transform: scale(1.06) rotate(2deg);
+    opacity: 1;
+    filter: blur(0);
+  }
+  100% {
+    transform: scale(1) rotate(0);
+    opacity: 1;
+  }
+}
+
+.poke-evolve-swap {
+  animation: poke-evolve-pop 0.55s cubic-bezier(0.34, 1.45, 0.64, 1) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .poke-evolve-swap {
+    animation: none;
+  }
+}

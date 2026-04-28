@@ -1,10 +1,20 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
+    function isAdmin() {
+      return request.auth != null && request.auth.token.email == "dimasmukhlas@gmail.com";
+    }
+
     // Per-user activity records (wheel sessions, etc.)
     match /users/{userId}/records/{recordId} {
       allow read, create, delete: if request.auth != null && request.auth.uid == userId;
       allow update: if false;
+    }
+
+    // Public YouTube posts (readable when published; admin can read/write all)
+    match /youtubePosts/{slug} {
+      allow read: if resource.data.published == true || isAdmin();
+      allow create, update, delete: if isAdmin();
     }
   }
 }

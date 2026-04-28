@@ -12,18 +12,19 @@ const activities = [
   { to: "/wheel", label: "Roda", icon: Circle, end: true as const },
   { to: "/wheel/shape", label: "Bentuk", icon: Shapes, end: false as const },
   { to: "/wheel/fraction", label: "Pecahan", icon: PieChart, end: false as const },
-  { to: "/wheel/sponge", label: "SpongeBob", icon: Languages, end: false as const },
+  { to: "/wheel/slowpoke", label: "Slowpoke", icon: Languages, end: false as const },
 ];
 
 /**
  * Cognizo “wheel” shell: one integrated SPA with real paths (no ?tab=).
- * Child routes render wheel rotation, shape, fraction, or sponge content.
+ * Child routes render wheel rotation, shape, fraction, or language lab (Slowpoke).
  */
 const TAB_QUERY_MAP: Record<string, string> = {
   wheel: "/wheel",
   shape: "/wheel/shape",
   fraction: "/wheel/fraction",
-  sponge: "/wheel/sponge",
+  slowpoke: "/wheel/slowpoke",
+  sponge: "/wheel/slowpoke",
 };
 
 const WheelAppLayout = () => {

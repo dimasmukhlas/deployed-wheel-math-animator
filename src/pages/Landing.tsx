@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -20,6 +20,7 @@ import { UserAuthButton } from "@/components/auth/UserAuthButton";
 import { LoginExperienceNudge } from "@/components/auth/LoginExperienceNudge";
 import { RecentRecordsCard } from "@/components/auth/RecentRecordsCard";
 import type { LandingLang } from "@/lib/landing-lang";
+import { Badge } from "@/components/ui/badge";
 
 const LANG_KEY = "cognizo-landing-lang";
 
@@ -46,7 +47,7 @@ function buildActivities(t: (key: keyof typeof strings.en.activities) => { title
     a("wheel", "/wheel", true, Circle, "from-sky-500/20 to-teal-500/10 border-primary/30"),
     a("shape", "/wheel/shape", true, Shapes, "from-violet-500/20 to-fuchsia-500/10 border-accent/30"),
     a("fraction", "/wheel/fraction", true, PieChart, "from-amber-500/20 to-orange-500/10 border-secondary/40"),
-    a("spongebob", "/wheel/sponge", true, Languages, "from-cyan-500/20 to-teal-500/10 border-cyan-500/35"),
+    a("slowpoke", "/wheel/slowpoke", true, Languages, "from-cyan-500/20 to-teal-500/10 border-cyan-500/35"),
   ];
 }
 
@@ -190,10 +191,10 @@ const strings = {
         title: "Fraction fun",
         description: "Fractions with animations and quizzes — parts, wholes, and proportion.",
       },
-      spongebob: {
-        title: "SpongeBob English",
+      slowpoke: {
+        title: "Slowpoke language lab",
         description:
-          "English and Indonesian language practice — Bikini Bottom quizzes and interactive simulations.",
+          "Indonesian (and more) at the same level as before — quizzes with a Slowpoke & Pokémon-water theme instead of SpongeBob.",
       },
     },
   },
@@ -336,10 +337,10 @@ const strings = {
         title: "Pecahan Seru",
         description: "Pecahan dengan animasi dan kuis — bagian, keseluruhan, dan perbandingan.",
       },
-      spongebob: {
-        title: "SpongeBob English",
+      slowpoke: {
+        title: "Bahasa & Slowpoke",
         description:
-          "Latihan bahasa Inggris dan Indonesia — kuis interaktif bertema Bikini Bottom.",
+          "Bahasa Indonesia (dan lainnya) level sama seperti sebelumnya — kuis bertema Slowpoke & Pokémon air, menggantikan SpongeBob.",
       },
     },
   },
@@ -347,11 +348,18 @@ const strings = {
 
 const Landing = () => {
   const [lang, setLang] = useState<LandingLang>("id");
+  const [searchParams] = useSearchParams();
 
   useEffect(() => {
+    const urlLang = searchParams.get("lang");
+    if (urlLang === "id" || urlLang === "en") {
+      setLang(urlLang);
+      localStorage.setItem(LANG_KEY, urlLang);
+      return;
+    }
     const saved = localStorage.getItem(LANG_KEY) as LandingLang | null;
     if (saved === "id" || saved === "en") setLang(saved);
-  }, []);
+  }, [searchParams]);
 
   const setLanguage = (next: LandingLang) => {
     setLang(next);
@@ -423,6 +431,36 @@ const Landing = () => {
       </header>
 
       <RecentRecordsCard lang={lang} />
+
+      <section className="max-w-4xl mx-auto mt-4 mb-10">
+        <Card className="glass-card overflow-hidden border bg-gradient-to-br from-indigo-500/10 to-sky-500/5">
+          <CardHeader className="pb-3">
+            <div className="flex items-center justify-between gap-3">
+              <div className="space-y-1">
+                <CardTitle className="text-xl md:text-2xl font-bold">
+                  {lang === "id" ? "Posting YouTube Cognizo" : "Cognizo YouTube posts"}
+                </CardTitle>
+                <CardDescription>
+                  {lang === "id"
+                    ? "Video populer dalam format artikel—mudah dibaca dan dibagikan."
+                    : "Popular videos in a post format—easy to read and share."}
+                </CardDescription>
+              </div>
+              <Badge variant="outline">New</Badge>
+            </div>
+          </CardHeader>
+          <CardContent className="flex flex-col sm:flex-row gap-3 sm:items-center sm:justify-between">
+            <p className="text-sm text-muted-foreground">
+              {lang === "id"
+                ? "Mulai dari topik privasi Wi‑Fi: apa saja yang bisa dilihat admin jaringan?"
+                : "Starting with Wi‑Fi privacy: what can the network admin see?"}
+            </p>
+            <Button asChild className="sm:shrink-0">
+              <Link to="/youtube">{lang === "id" ? "Buka posting" : "Open posts"}</Link>
+            </Button>
+          </CardContent>
+        </Card>
+      </section>
 
       {/* Interactive games — first for a clean, focused top */}
       <section id="games" className="max-w-4xl mx-auto mb-4">

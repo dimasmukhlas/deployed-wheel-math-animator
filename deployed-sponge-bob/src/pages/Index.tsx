@@ -1,32 +1,41 @@
 import { useState, useCallback } from "react";
+import type { CSSProperties } from "react";
 import underwaterBg from "@sponge/assets/underwater-bg.png";
 import Bubbles from "@sponge/components/Bubbles";
+import SlowpokeBackdrop from "@sponge/components/SlowpokeBackdrop";
 import StartScreen from "@sponge/components/StartScreen";
 import QuizCard from "@sponge/components/QuizCard";
-import ProgressBar from "@sponge/components/ProgressBar";
+import ProgressBar, { type PokeEvolutionStage } from "@sponge/components/ProgressBar";
 import ResultsScreen from "@sponge/components/ResultsScreen";
 import { getQuestions, type QuizCategory, type QuizLevel, type QuizQuestion } from "@sponge/data/quizQuestions";
 
 type Screen = "name" | "menu" | "start" | "quiz" | "results";
+
+export type LanguageLabVariant = "sponge" | "slowpoke";
 
 interface LevelCardProps {
   level: QuizLevel;
   title: string;
   desc: string;
   emoji: string;
-  spongebob?: boolean;
+  brandTag?: string;
   colorClass: string;
   fgClass: string;
   onClick: () => void;
 }
 
-const LevelCard = ({ level, title, desc, emoji, spongebob, colorClass, fgClass, onClick }: LevelCardProps) => (
+const LevelCard = ({ level, title, desc, emoji, brandTag, colorClass, fgClass, onClick }: LevelCardProps) => (
   <button
+    type="button"
     onClick={onClick}
     className={`${colorClass} rounded-2xl p-4 md:p-5 shadow-2xl border-4 border-foreground/10 hover:scale-105 active:scale-95 transition-transform text-left relative overflow-hidden`}
   >
-    {spongebob && (
-      <div className={`absolute top-2 right-2 text-xs font-spongeDisplay bg-foreground/20 ${fgClass} px-2 py-1 rounded-full`}>🧽 SpongeBob!</div>
+    {brandTag && (
+      <div
+        className={`absolute top-2 right-2 text-xs font-spongeDisplay bg-foreground/20 ${fgClass} px-2 py-1 rounded-full max-w-[9rem] text-right leading-tight`}
+      >
+        {brandTag}
+      </div>
     )}
     <div className="flex items-center gap-2 mb-1">
       <span className="text-2xl">{emoji}</span>
@@ -37,15 +46,30 @@ const LevelCard = ({ level, title, desc, emoji, spongebob, colorClass, fgClass, 
   </button>
 );
 
-const Index = () => {
+const slowpokeShell: CSSProperties = {
+  backgroundImage: "linear-gradient(165deg, #e9d5ff 0%, #fbcfe8 42%, #7dd3fc 100%)",
+  backgroundSize: "cover",
+  backgroundPosition: "center",
+};
+
+interface LanguageQuizIndexProps {
+  /** `slowpoke` = Indonesian track + UI themed after Pokémon Slowpoke (replaces Bikini Bottom). */
+  variant?: LanguageLabVariant;
+}
+
+const LanguageQuizIndex = ({ variant = "slowpoke" }: LanguageQuizIndexProps) => {
+  const isSlow = variant === "slowpoke";
+  const brand = isSlow ? "🩷 Slowpoke" : "🧽 SpongeBob";
+
   const [screen, setScreen] = useState<Screen>("name");
   const [studentName, setStudentName] = useState("");
   const [nameInput, setNameInput] = useState("");
-  const [category, setCategory] = useState<QuizCategory>("english");
+  const [category, setCategory] = useState<QuizCategory>(isSlow ? "indonesian" : "english");
   const [level, setLevel] = useState<QuizLevel>(1);
   const [questions, setQuestions] = useState<QuizQuestion[]>([]);
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [score, setScore] = useState(0);
+  const [pokeEvolution, setPokeEvolution] = useState<PokeEvolutionStage>("slowpoke");
 
   const handleNameSubmit = useCallback(() => {
     if (nameInput.trim()) {
@@ -61,28 +85,39 @@ const Index = () => {
   }, []);
 
   const handleStart = useCallback(() => {
-    setQuestions(getQuestions(category, level));
+    setQuestions(
+      getQuestions(category, level, {
+        indonesianVariant: isSlow ? "slowpoke" : "sponge",
+      })
+    );
     setScreen("quiz");
     setCurrentQuestion(0);
     setScore(0);
-  }, [category, level]);
+    setPokeEvolution("slowpoke");
+  }, [category, level, isSlow]);
+
+  const handlePokeIconClick = useCallback(() => {
+    setPokeEvolution((e) => (e === "slowpoke" ? "slowbro" : e));
+  }, []);
 
   const handleAnswer = useCallback(
     (correct: boolean) => {
       if (correct) setScore((s) => s + 1);
       if (currentQuestion + 1 >= questions.length) {
-        setTimeout(() => setScreen("results"), 300);
+        if (isSlow) setPokeEvolution("slowking");
+        setTimeout(() => setScreen("results"), 380);
       } else {
         setCurrentQuestion((q) => q + 1);
       }
     },
-    [currentQuestion, questions.length]
+    [currentQuestion, questions.length, isSlow]
   );
 
   const handleBackToMenu = useCallback(() => {
     setScreen("menu");
     setCurrentQuestion(0);
     setScore(0);
+    setPokeEvolution("slowpoke");
   }, []);
 
   const pri = "bg-primary";
@@ -92,36 +127,45 @@ const Index = () => {
   const san = "bg-sandy";
   const sanFg = "text-primary-foreground";
 
-  return (
-    <div
-      className="min-h-screen flex flex-col items-center justify-center p-4 relative overflow-hidden"
-      style={{
+  const shellStyle: CSSProperties = isSlow
+    ? slowpokeShell
+    : {
         backgroundImage: `url(${underwaterBg})`,
         backgroundSize: "cover",
         backgroundPosition: "center",
-      }}
-    >
-      <div className="absolute inset-0 bg-background/40 z-0" />
-      <Bubbles />
+      };
+
+  return (
+    <div className="min-h-screen flex flex-col items-center justify-center p-4 relative overflow-hidden" style={shellStyle}>
+      {isSlow && <SlowpokeBackdrop />}
+      <div
+        className={
+          isSlow
+            ? "absolute inset-0 z-[2] bg-gradient-to-b from-violet-200/30 via-fuchsia-100/20 to-cyan-400/25"
+            : "absolute inset-0 bg-background/40 z-0"
+        }
+      />
+      <div className={`fixed inset-0 pointer-events-none z-[3] ${isSlow ? "opacity-[0.32]" : ""}`}>
+        <Bubbles />
+      </div>
 
       <div className="relative z-10 w-full flex flex-col items-center justify-center py-8">
-        {/* Name Entry Screen */}
         {screen === "name" && (
           <div className="w-full max-w-md mx-auto text-center animate-bounce-in">
             <div className="bg-primary rounded-3xl p-8 md:p-10 shadow-2xl border-4 border-primary-foreground/20">
-              <div className="text-7xl mb-4">🧽</div>
+              <div className="text-7xl mb-4">{isSlow ? "🩷" : "🧽"}</div>
               <h1 className="font-spongeDisplay text-3xl md:text-4xl text-primary-foreground mb-2">
-                Ahoy there!
+                {isSlow ? "Halo, pelatih!" : "Ahoy there!"}
               </h1>
               <p className="font-spongeBody text-base text-primary-foreground/70 mb-6">
-                What's your name, captain?
+                {isSlow ? "Siapa nama kamu? (What’s your name?)" : "What's your name, captain?"}
               </p>
               <input
                 type="text"
                 value={nameInput}
                 onChange={(e) => setNameInput(e.target.value)}
                 onKeyDown={(e) => e.key === "Enter" && handleNameSubmit()}
-                placeholder="Type your name..."
+                placeholder={isSlow ? "Tulis nama kamu…" : "Type your name..."}
                 className="w-full px-5 py-4 rounded-xl text-lg font-spongeBody font-bold text-center bg-primary-foreground/20 text-primary-foreground placeholder:text-primary-foreground/40 border-2 border-primary-foreground/20 focus:border-primary-foreground/50 focus:outline-none mb-4"
                 autoFocus
               />
@@ -130,7 +174,7 @@ const Index = () => {
                 disabled={!nameInput.trim()}
                 className="bg-accent text-accent-foreground font-spongeDisplay text-xl px-10 py-4 rounded-xl shadow-lg hover:scale-105 active:scale-95 transition-transform border-2 border-foreground/10 disabled:opacity-50 disabled:hover:scale-100"
               >
-                🚀 Let's Go!
+                {isSlow ? "🚀 Ayo mulai!" : "🚀 Let's Go!"}
               </button>
             </div>
           </div>
@@ -138,90 +182,144 @@ const Index = () => {
 
         {screen === "menu" && (
           <div className="w-full max-w-4xl mx-auto text-center animate-bounce-in">
-            <div className="text-5xl mb-2">🧽</div>
+            <div className="text-5xl mb-2">{isSlow ? "🩷" : "🧽"}</div>
             <h1 className="font-spongeDisplay text-2xl md:text-4xl text-foreground mb-1 drop-shadow-lg">
-              Welcome, {studentName}! 🌟
+              {isSlow ? `Selamat datang, ${studentName}!` : `Welcome, ${studentName}!`} 🌟
             </h1>
-            <p className="font-spongeBody text-base text-foreground/80 mb-6 drop-shadow">
-              Choose your quiz adventure!
+            <p className="font-spongeBody text-base text-foreground/80 mb-2 drop-shadow">
+              {isSlow
+                ? "Pilih kuis — trek Bahasa Indonesia memakai tema Slowpoke & Pokémon air (level sama seperti sebelumnya)."
+                : "Choose your quiz adventure!"}
             </p>
 
-            {/* Toddler Section */}
             <div className="mb-5">
               <h3 className="font-spongeDisplay text-lg text-foreground mb-2 drop-shadow flex items-center justify-center gap-2">
                 🍼 Toddler <span className="text-sm font-spongeBody opacity-70">(Age 3)</span>
               </h3>
               <div className="grid grid-cols-2 gap-3 max-w-2xl mx-auto">
-                <LevelCard level={1} title="Shapes & Colors" desc="Circles, squares, colors & counting" emoji="🔷" colorClass="bg-ocean-light" fgClass="text-foreground" onClick={() => handlePickQuiz("toddler", 1)} />
-                <LevelCard level={2} title="SpongeBob Shapes" desc="Shapes & colors with SpongeBob!" emoji="🍍" spongebob colorClass="bg-ocean-light" fgClass="text-foreground" onClick={() => handlePickQuiz("toddler", 2)} />
+                <LevelCard
+                  level={1}
+                  title="Shapes & Colors"
+                  desc="Circles, squares, colors & counting"
+                  emoji="🔷"
+                  colorClass="bg-ocean-light"
+                  fgClass="text-foreground"
+                  onClick={() => handlePickQuiz("toddler", 1)}
+                />
+                <LevelCard
+                  level={2}
+                  title={isSlow ? "Bentuk (tema air)" : "SpongeBob Shapes"}
+                  desc={isSlow ? "Bentuk & warna dengan tema tenang 💧" : "Shapes & colors with SpongeBob!"}
+                  emoji={isSlow ? "🩷" : "🍍"}
+                  brandTag={brand}
+                  colorClass="bg-ocean-light"
+                  fgClass="text-foreground"
+                  onClick={() => handlePickQuiz("toddler", 2)}
+                />
               </div>
             </div>
 
-            {/* Pre-School Section */}
             <div className="mb-5">
               <h3 className="font-spongeDisplay text-lg text-foreground mb-2 drop-shadow flex items-center justify-center gap-2">
                 👶 Pre-School <span className="text-sm font-spongeBody opacity-70">(Age 4+)</span>
               </h3>
               <div className="grid grid-cols-2 gap-3 max-w-2xl mx-auto">
-                <LevelCard level={1} title="Basics" desc="Colors, shapes, animals & counting" emoji="🧸" colorClass={san} fgClass={sanFg} onClick={() => handlePickQuiz("preschool", 1)} />
-                <LevelCard level={2} title="SpongeBob Basics" desc="Easy SpongeBob questions!" emoji="🍍" spongebob colorClass={san} fgClass={sanFg} onClick={() => handlePickQuiz("preschool", 2)} />
+                <LevelCard
+                  level={1}
+                  title="Basics"
+                  desc="Colors, shapes, animals & counting"
+                  emoji="🧸"
+                  colorClass={san}
+                  fgClass={sanFg}
+                  onClick={() => handlePickQuiz("preschool", 1)}
+                />
+                <LevelCard
+                  level={2}
+                  title={isSlow ? "Pra-sekolah (air)" : "SpongeBob Basics"}
+                  desc={isSlow ? "Soal mudah suasana tepi air" : "Easy SpongeBob questions!"}
+                  emoji={isSlow ? "🩷" : "🍍"}
+                  brandTag={brand}
+                  colorClass={san}
+                  fgClass={sanFg}
+                  onClick={() => handlePickQuiz("preschool", 2)}
+                />
               </div>
             </div>
 
-            {/* English Section */}
             <div className="mb-5">
               <h3 className="font-spongeDisplay text-lg text-foreground mb-2 drop-shadow flex items-center justify-center gap-2">
                 🇬🇧 English <span className="text-sm font-spongeBody opacity-70">(2nd Grade)</span>
               </h3>
               <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
                 <LevelCard level={1} title="Basic" desc="Vocabulary & grammar" emoji="📚" colorClass={pri} fgClass={priFg} onClick={() => handlePickQuiz("english", 1)} />
-                <LevelCard level={2} title="SpongeBob" desc="English with Bikini Bottom" emoji="🍍" spongebob colorClass={pri} fgClass={priFg} onClick={() => handlePickQuiz("english", 2)} />
-                <LevelCard level={3} title="Advanced" desc="Complex grammar & writing" emoji="🎓" spongebob colorClass={pri} fgClass={priFg} onClick={() => handlePickQuiz("english", 3)} />
-                <LevelCard level={4} title="Expert" desc="Literary devices & analysis" emoji="🏆" spongebob colorClass={pri} fgClass={priFg} onClick={() => handlePickQuiz("english", 4)} />
-                <LevelCard level={5} title="Scholar" desc="Rhetoric & vocabulary" emoji="🔥" spongebob colorClass={pri} fgClass={priFg} onClick={() => handlePickQuiz("english", 5)} />
-                <LevelCard level={6} title="Master" desc="Literary criticism" emoji="👑" spongebob colorClass={pri} fgClass={priFg} onClick={() => handlePickQuiz("english", 6)} />
+                <LevelCard level={2} title={isSlow ? "English (laut)" : "SpongeBob"} desc={isSlow ? "English + petualangan air" : "English with Bikini Bottom"} emoji={isSlow ? "🩷" : "🍍"} brandTag={brand} colorClass={pri} fgClass={priFg} onClick={() => handlePickQuiz("english", 2)} />
+                <LevelCard level={3} title="Advanced" desc="Complex grammar & writing" emoji="🎓" brandTag={brand} colorClass={pri} fgClass={priFg} onClick={() => handlePickQuiz("english", 3)} />
+                <LevelCard level={4} title="Expert" desc="Literary devices & analysis" emoji="🏆" brandTag={brand} colorClass={pri} fgClass={priFg} onClick={() => handlePickQuiz("english", 4)} />
+                <LevelCard level={5} title="Scholar" desc="Rhetoric & vocabulary" emoji="🔥" brandTag={brand} colorClass={pri} fgClass={priFg} onClick={() => handlePickQuiz("english", 5)} />
+                <LevelCard level={6} title="Master" desc="Literary criticism" emoji="👑" brandTag={brand} colorClass={pri} fgClass={priFg} onClick={() => handlePickQuiz("english", 6)} />
               </div>
             </div>
 
-            {/* Indonesian Section */}
             <div>
               <h3 className="font-spongeDisplay text-lg text-foreground mb-2 drop-shadow flex items-center justify-center gap-2">
                 🇮🇩 Indonesian <span className="text-sm font-spongeBody opacity-70">(Bahasa)</span>
               </h3>
               <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-                <LevelCard level={1} title="Dasar" desc="Basic words & phrases" emoji="🌴" colorClass={acc} fgClass={accFg} onClick={() => handlePickQuiz("indonesian", 1)} />
-                <LevelCard level={2} title="SpongeBob" desc="Bahasa di Bikini Bottom" emoji="🍍" spongebob colorClass={acc} fgClass={accFg} onClick={() => handlePickQuiz("indonesian", 2)} />
-                <LevelCard level={3} title="Lanjutan" desc="Affixes & sentences" emoji="🎓" spongebob colorClass={acc} fgClass={accFg} onClick={() => handlePickQuiz("indonesian", 3)} />
-                <LevelCard level={4} title="Mahir" desc="Proverbs & literature" emoji="🏆" spongebob colorClass={acc} fgClass={accFg} onClick={() => handlePickQuiz("indonesian", 4)} />
-                <LevelCard level={5} title="Cendekia" desc="Literary analysis" emoji="🔥" spongebob colorClass={acc} fgClass={accFg} onClick={() => handlePickQuiz("indonesian", 5)} />
-                <LevelCard level={6} title="Master" desc="Cultural criticism" emoji="👑" spongebob colorClass={acc} fgClass={accFg} onClick={() => handlePickQuiz("indonesian", 6)} />
+                <LevelCard level={1} title="Dasar" desc="Kosakata & frasa dasar" emoji="🌴" colorClass={acc} fgClass={accFg} onClick={() => handlePickQuiz("indonesian", 1)} />
+                <LevelCard
+                  level={2}
+                  title={isSlow ? "Slowpoke ID" : "SpongeBob"}
+                  desc={isSlow ? "Level sama — tema Slowpoke & air" : "Bahasa di Bikini Bottom"}
+                  emoji={isSlow ? "🩷" : "🍍"}
+                  brandTag={isSlow ? "🇮🇩 Slowpoke" : brand}
+                  colorClass={acc}
+                  fgClass={accFg}
+                  onClick={() => handlePickQuiz("indonesian", 2)}
+                />
+                <LevelCard level={3} title="Lanjutan" desc="Imbuhan & kalimat" emoji="🎓" brandTag={brand} colorClass={acc} fgClass={accFg} onClick={() => handlePickQuiz("indonesian", 3)} />
+                <LevelCard level={4} title="Mahir" desc="Majas & sastra" emoji="🏆" brandTag={brand} colorClass={acc} fgClass={accFg} onClick={() => handlePickQuiz("indonesian", 4)} />
+                <LevelCard level={5} title="Cendekia" desc="Analisis sastra" emoji="🔥" brandTag={brand} colorClass={acc} fgClass={accFg} onClick={() => handlePickQuiz("indonesian", 5)} />
+                <LevelCard level={6} title="Master" desc="Kritik budaya" emoji="👑" brandTag={brand} colorClass={acc} fgClass={accFg} onClick={() => handlePickQuiz("indonesian", 6)} />
               </div>
             </div>
 
-            {/* Spanish Section */}
-            <div className="mb-5">
+            <div className="mb-5 mt-6">
               <h3 className="font-spongeDisplay text-lg text-foreground mb-2 drop-shadow flex items-center justify-center gap-2">
                 🇪🇸 Spanish <span className="text-sm font-spongeBody opacity-70">(Español)</span>
               </h3>
               <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
                 <LevelCard level={1} title="Básico" desc="Basic words & phrases" emoji="🌮" colorClass="bg-sandy" fgClass="text-primary-foreground" onClick={() => handlePickQuiz("spanish", 1)} />
-                <LevelCard level={2} title="SpongeBob" desc="Español en Bikini Bottom" emoji="🍍" spongebob colorClass="bg-sandy" fgClass="text-primary-foreground" onClick={() => handlePickQuiz("spanish", 2)} />
-                <LevelCard level={3} title="Intermedio" desc="Grammar & conjugation" emoji="🎓" spongebob colorClass="bg-sandy" fgClass="text-primary-foreground" onClick={() => handlePickQuiz("spanish", 3)} />
-                <LevelCard level={4} title="Avanzado" desc="Literary devices & analysis" emoji="🏆" spongebob colorClass="bg-sandy" fgClass="text-primary-foreground" onClick={() => handlePickQuiz("spanish", 4)} />
-                <LevelCard level={5} title="Erudito" desc="Rhetoric & criticism" emoji="🔥" spongebob colorClass="bg-sandy" fgClass="text-primary-foreground" onClick={() => handlePickQuiz("spanish", 5)} />
-                <LevelCard level={6} title="Maestro" desc="Philosophy & culture" emoji="👑" spongebob colorClass="bg-sandy" fgClass="text-primary-foreground" onClick={() => handlePickQuiz("spanish", 6)} />
+                <LevelCard level={2} title={isSlow ? "Español (agua)" : "SpongeBob"} desc={isSlow ? "Español con tema acuático" : "Español en Bikini Bottom"} emoji={isSlow ? "🩷" : "🍍"} brandTag={brand} colorClass="bg-sandy" fgClass="text-primary-foreground" onClick={() => handlePickQuiz("spanish", 2)} />
+                <LevelCard level={3} title="Intermedio" desc="Grammar & conjugation" emoji="🎓" brandTag={brand} colorClass="bg-sandy" fgClass="text-primary-foreground" onClick={() => handlePickQuiz("spanish", 3)} />
+                <LevelCard level={4} title="Avanzado" desc="Literary devices & analysis" emoji="🏆" brandTag={brand} colorClass="bg-sandy" fgClass="text-primary-foreground" onClick={() => handlePickQuiz("spanish", 4)} />
+                <LevelCard level={5} title="Erudito" desc="Rhetoric & criticism" emoji="🔥" brandTag={brand} colorClass="bg-sandy" fgClass="text-primary-foreground" onClick={() => handlePickQuiz("spanish", 5)} />
+                <LevelCard level={6} title="Maestro" desc="Philosophy & culture" emoji="👑" brandTag={brand} colorClass="bg-sandy" fgClass="text-primary-foreground" onClick={() => handlePickQuiz("spanish", 6)} />
               </div>
             </div>
           </div>
         )}
 
         {screen === "start" && (
-          <StartScreen onStart={handleStart} category={category} level={level} onBack={handleBackToMenu} studentName={studentName} />
+          <StartScreen
+            onStart={handleStart}
+            category={category}
+            level={level}
+            onBack={handleBackToMenu}
+            studentName={studentName}
+            variant={variant}
+          />
         )}
 
         {screen === "quiz" && questions.length > 0 && (
           <>
-            <ProgressBar current={currentQuestion} total={questions.length} score={score} />
+            <ProgressBar
+              current={currentQuestion}
+              total={questions.length}
+              score={score}
+              variant={variant}
+              evolution={isSlow ? pokeEvolution : "slowpoke"}
+              onPokeIconClick={isSlow ? handlePokeIconClick : undefined}
+            />
             <QuizCard
               key={`${category}-${level}-${currentQuestion}`}
               question={questions[currentQuestion]}
@@ -232,11 +330,18 @@ const Index = () => {
         )}
 
         {screen === "results" && (
-          <ResultsScreen score={score} total={questions.length} onRestart={handleStart} onBackToMenu={handleBackToMenu} studentName={studentName} />
+          <ResultsScreen
+            score={score}
+            total={questions.length}
+            onRestart={handleStart}
+            onBackToMenu={handleBackToMenu}
+            studentName={studentName}
+            variant={variant}
+          />
         )}
       </div>
     </div>
   );
 };
 
-export default Index;
+export default LanguageQuizIndex;

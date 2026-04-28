@@ -3,21 +3,54 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <!-- TODO: Set the document title to the name of your application -->
-    <title>Cognize - Wheel Rotation Learning</title>
-    <meta name="description" content="Interactive learning app to calculate wheel rotations" />
+    <title>Cognizo — The learning platform</title>
+    <meta
+      name="description"
+      content="Cognizo is a learning platform with interactive activities and YouTube-based posts—math, logic, language, and practical explanations."
+    />
     <link rel="icon" href="/favicon.jpeg" type="image/jpeg" />
-    <meta name="author" content="Lovable" />
+    <meta name="author" content="Cognizo" />
 
-    <!-- TODO: Update og:title to match your application name -->
-    <meta property="og:title" content="Lovable App" />
-    <meta property="og:description" content="Lovable Generated Project" />
+    <meta property="og:title" content="Cognizo — The learning platform" />
+    <meta
+      property="og:description"
+      content="Interactive learning activities and readable posts inspired by Cognizo YouTube videos."
+    />
     <meta property="og:type" content="website" />
-    <meta property="og:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
+    <meta property="og:image" content="/favicon.jpeg" />
+    <meta property="og:image:alt" content="Cognizo — The learning platform" />
 
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:site" content="@Lovable" />
-    <meta name="twitter:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
+    <meta name="twitter:site" content="@cognizo" />
+    <meta name="twitter:image" content="/favicon.jpeg" />
+
+    <link rel="alternate" hrefLang="en" href="/?lang=en" />
+    <link rel="alternate" hrefLang="id" href="/?lang=id" />
+    <link rel="alternate" hrefLang="x-default" href="/" />
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "Organization",
+            "name": "Cognizo",
+            "url": "https://cognizowheel.web.app",
+            "sameAs": ["https://www.youtube.com/@cognizodotnet"]
+          },
+          {
+            "@type": "WebSite",
+            "name": "Cognizo — The learning platform",
+            "url": "https://cognizowheel.web.app",
+            "potentialAction": {
+              "@type": "SearchAction",
+              "target": "https://cognizowheel.web.app/youtube",
+              "query-input": "required name=search_term_string"
+            }
+          }
+        ]
+      }
+    </script>
   </head>
 
   <body>

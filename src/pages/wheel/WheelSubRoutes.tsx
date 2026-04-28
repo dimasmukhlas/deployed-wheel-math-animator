@@ -1,6 +1,6 @@
 import ShapeIndex from "@shape/pages/Index";
 import FractionIndex from "@fraction/pages/Index";
-import SpongeIndex from "@sponge/pages/Index";
+import LanguageQuizIndex from "@sponge/pages/Index";
 
 /** Shape explorer — geometry “app” inside the wheel shell (same bundle, scoped styles). */
 export function CognizoShapeApp() {
@@ -19,10 +19,11 @@ export function CognizoFractionApp() {
   );
 }
 
-export function CognizoSpongeApp() {
+/** Bahasa Indonesia + language quizzes — Slowpoke / Pokémon-air theme (replaces SpongeBob). */
+export function CognizoSlowpokeApp() {
   return (
     <div className="subapp-sponge min-h-screen">
-      <SpongeIndex />
+      <LanguageQuizIndex variant="slowpoke" />
     </div>
   );
 }

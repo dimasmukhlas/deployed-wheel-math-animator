@@ -6,9 +6,11 @@ interface StartScreenProps {
   level: QuizLevel;
   onBack: () => void;
   studentName: string;
+  /** Slowpoke-themed copy for the language lab route */
+  variant?: "sponge" | "slowpoke";
 }
 
-const config: Record<QuizCategory, Partial<Record<QuizLevel, { emoji: string; title: string; desc: string }>>> = {
+const spongeConfig: Record<QuizCategory, Partial<Record<QuizLevel, { emoji: string; title: string; desc: string }>>> = {
   toddler: {
     1: { emoji: "🔷", title: "Shapes & Colors", desc: "Learn shapes, colors & counting! Super easy! 🌈" },
     2: { emoji: "🍍", title: "SpongeBob Shapes", desc: "Shapes & colors with SpongeBob! 🧽" },
@@ -43,13 +45,44 @@ const config: Record<QuizCategory, Partial<Record<QuizLevel, { emoji: string; ti
   },
 };
 
-const StartScreen = ({ onStart, category, level, onBack, studentName }: StartScreenProps) => {
-  const c = config[category]?.[level] || { emoji: "🧽", title: "Quiz", desc: "Test your knowledge!" };
+const slowpokeConfig: Record<QuizCategory, Partial<Record<QuizLevel, { emoji: string; title: string; desc: string }>>> = {
+  ...spongeConfig,
+  toddler: {
+    1: spongeConfig.toddler[1]!,
+    2: { emoji: "🩷", title: "Bentuk & warna (Slowpoke)", desc: "Bentuk dan warna dengan tema Pokémon air yang tenang! 💧" },
+  },
+  preschool: {
+    1: spongeConfig.preschool[1]!,
+    2: { emoji: "🩷", title: "Pra-sekolah (Slowpoke)", desc: "Soal mudah dengan suasana tepi air! 🌊" },
+  },
+  english: {
+    ...spongeConfig.english,
+    2: { emoji: "🩷", title: "English (tema air)", desc: "English practice — still ocean-adventure themed! 🌊" },
+  },
+  indonesian: {
+    1: { emoji: "🇮🇩", title: "Bahasa Dasar", desc: "Kosakata & frasa dasar — sama levelnya dengan trek lama. 📘" },
+    2: { emoji: "🩷", title: "Bahasa Indonesia — Slowpoke", desc: "Kalimat & kosa kata bertema Slowpoke & Pokémon air — level sama dengan SpongeBob. 💧" },
+    3: { emoji: "🎓", title: "Bahasa Lanjutan", desc: "Imbuhan, kalimat majemuk & cerita habitat air. 📖" },
+    4: { emoji: "🏆", title: "Bahasa Mahir", desc: "Majas, pasif & peribahasa — konteks Slowpoke. 🌟" },
+    5: { emoji: "🔥", title: "Bahasa Cendekia", desc: "Analisis sastra & struktur kalimat kompleks. 🧠" },
+    6: { emoji: "👑", title: "Bahasa Master", desc: "Kritik budaya & metafora tingkat lanjut. 🏛️" },
+  },
+  spanish: {
+    ...spongeConfig.spanish,
+    2: { emoji: "🩷", title: "Español (tema agua)", desc: "Spanish with the same playful water theme. 🌊" },
+  },
+};
+
+const StartScreen = ({ onStart, category, level, onBack, studentName, variant = "sponge" }: StartScreenProps) => {
+  const table = variant === "slowpoke" ? slowpokeConfig : spongeConfig;
+  const c = table[category]?.[level] || { emoji: "🧽", title: "Quiz", desc: "Test your knowledge!" };
+  const heroEmoji = variant === "slowpoke" ? "🩷" : "🧽";
+  const deco = variant === "slowpoke" ? ["🩷", "💧", "🐚", "💧", "🩷"] : ["⭐", "🐙", "⭐", "🦀", "⭐"];
 
   return (
     <div className="w-full max-w-lg mx-auto text-center animate-bounce-in">
       <div className="bg-primary rounded-3xl p-8 md:p-10 shadow-2xl border-4 border-primary-foreground/20">
-        <div className="text-7xl mb-4">🧽</div>
+        <div className="text-7xl mb-4">{heroEmoji}</div>
         <p className="font-spongeDisplay text-lg text-primary-foreground/70 mb-1">Ready, {studentName}?</p>
         <div className="font-spongeDisplay text-sm text-primary-foreground/60 bg-primary-foreground/10 inline-block px-3 py-1 rounded-full mb-3">
           Level {level}
@@ -60,8 +93,10 @@ const StartScreen = ({ onStart, category, level, onBack, studentName }: StartScr
         <p className="font-spongeBody text-base text-primary-foreground/70 mb-6">{c.desc}</p>
 
         <div className="flex justify-center gap-4 mb-6 text-4xl">
-          {["⭐", "🐙", "⭐", "🦀", "⭐"].map((e, i) => (
-            <span key={i} className="animate-pop-in" style={{ animationDelay: `${i * 0.1}s` }}>{e}</span>
+          {deco.map((e, i) => (
+            <span key={i} className="animate-pop-in" style={{ animationDelay: `${i * 0.1}s` }}>
+              {e}
+            </span>
           ))}
         </div>
 

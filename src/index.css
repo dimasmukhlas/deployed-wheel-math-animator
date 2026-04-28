@@ -128,6 +128,11 @@
     box-shadow: var(--shadow-card);
   }
 
+  /* Article shell to mimic editorial blog spacing */
+  .cognizo-article {
+    @apply bg-card border shadow-card rounded-2xl;
+  }
+
   @keyframes landing-fade-up {
     from {
       opacity: 0;

@@ -1,3 +1,12 @@
+import {
+  slowpokeIndonesianLevel1,
+  slowpokeIndonesianLevel2,
+  slowpokeIndonesianLevel3,
+  slowpokeIndonesianLevel4,
+  slowpokeIndonesianLevel5,
+  slowpokeIndonesianLevel6,
+} from "./indonesianSlowpokeQuiz";
+
 export interface QuizQuestion {
   id: number;
   question: string;
@@ -630,12 +639,40 @@ export const spanishLevel6: QuizQuestion[] = [
   { id: 25, question: "'Apokatástasis narrativa: restauración final.' 'Apokatástasis' means:", options: ["Apocalypse", "Universal restoration", "Apostasy", "Apathy"], emojis: ["💥", "🔄", "❌", "😶"], correctIndex: 1 },
 ];
 
-export function getQuestions(category: QuizCategory, level: QuizLevel): QuizQuestion[] {
+export type GetQuestionsOptions = {
+  /** Indonesian track: SpongeBob-themed vs Slowpoke/Pokémon-water-themed (same difficulty tier). */
+  indonesianVariant?: "sponge" | "slowpoke";
+};
+
+export function getQuestions(
+  category: QuizCategory,
+  level: QuizLevel,
+  opts?: GetQuestionsOptions
+): QuizQuestion[] {
+  const indonesianLevels: Partial<Record<QuizLevel, QuizQuestion[]>> =
+    opts?.indonesianVariant === "slowpoke"
+      ? {
+          1: slowpokeIndonesianLevel1,
+          2: slowpokeIndonesianLevel2,
+          3: slowpokeIndonesianLevel3,
+          4: slowpokeIndonesianLevel4,
+          5: slowpokeIndonesianLevel5,
+          6: slowpokeIndonesianLevel6,
+        }
+      : {
+          1: indonesianLevel1,
+          2: indonesianLevel2,
+          3: indonesianLevel3,
+          4: indonesianLevel4,
+          5: indonesianLevel5,
+          6: indonesianLevel6,
+        };
+
   const map: Record<QuizCategory, Partial<Record<QuizLevel, QuizQuestion[]>>> = {
     toddler: { 1: toddlerLevel1, 2: toddlerLevel2 },
     preschool: { 1: preschoolLevel1, 2: preschoolLevel2 },
     english: { 1: englishLevel1, 2: englishLevel2, 3: englishLevel3, 4: englishLevel4, 5: englishLevel5, 6: englishLevel6 },
-    indonesian: { 1: indonesianLevel1, 2: indonesianLevel2, 3: indonesianLevel3, 4: indonesianLevel4, 5: indonesianLevel5, 6: indonesianLevel6 },
+    indonesian: indonesianLevels,
     spanish: { 1: spanishLevel1, 2: spanishLevel2, 3: spanishLevel3, 4: spanishLevel4, 5: spanishLevel5, 6: spanishLevel6 },
   };
   return shuffleArray([...(map[category][level] || [])]);

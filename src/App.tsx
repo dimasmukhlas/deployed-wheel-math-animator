@@ -8,7 +8,11 @@ import Landing from "./pages/Landing";
 import NotFound from "./pages/NotFound";
 import WheelAppLayout from "@/pages/wheel/WheelAppLayout";
 import WheelPlayground from "@/pages/wheel/WheelPlayground";
-import { CognizoShapeApp, CognizoFractionApp, CognizoSpongeApp } from "@/pages/wheel/WheelSubRoutes";
+import { CognizoShapeApp, CognizoFractionApp, CognizoSlowpokeApp } from "@/pages/wheel/WheelSubRoutes";
+import YouTubeIndex from "@/pages/youtube/YouTubeIndex";
+import YouTubePostPage from "@/pages/youtube/YouTubePost";
+import AdminCMS from "@/pages/admin/AdminCMS";
+import { SiteFooter } from "@/components/site/SiteFooter";
 
 const queryClient = new QueryClient();
 
@@ -26,18 +30,23 @@ const App = () => (
         <BrowserRouter future={routerFuture}>
           <Routes>
             <Route path="/" element={<Landing />} />
+            <Route path="/youtube" element={<YouTubeIndex />} />
+            <Route path="/youtube/:slug" element={<YouTubePostPage />} />
+            <Route path="/admin" element={<AdminCMS />} />
             <Route path="/wheel" element={<WheelAppLayout />}>
               <Route index element={<WheelPlayground />} />
               <Route path="shape" element={<CognizoShapeApp />} />
               <Route path="fraction" element={<CognizoFractionApp />} />
-              <Route path="sponge" element={<CognizoSpongeApp />} />
+              <Route path="slowpoke" element={<CognizoSlowpokeApp />} />
+              <Route path="sponge" element={<Navigate to="/wheel/slowpoke" replace />} />
             </Route>
             {/* Legacy paths → new wheel sub-routes */}
             <Route path="/shape/*" element={<Navigate to="/wheel/shape" replace />} />
             <Route path="/fraction/*" element={<Navigate to="/wheel/fraction" replace />} />
-            <Route path="/sponge/*" element={<Navigate to="/wheel/sponge" replace />} />
+            <Route path="/sponge/*" element={<Navigate to="/wheel/slowpoke" replace />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
+          <SiteFooter />
         </BrowserRouter>
       </TooltipProvider>
     </AuthProvider>

@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import confetti from "canvas-confetti";
+import slowkingImg from "@sponge/assets/slowking-progress.png";
 
 interface ResultsScreenProps {
   score: number;
@@ -7,9 +8,17 @@ interface ResultsScreenProps {
   onRestart: () => void;
   onBackToMenu: () => void;
   studentName: string;
+  variant?: "sponge" | "slowpoke";
 }
 
-const ResultsScreen = ({ score, total, onRestart, onBackToMenu, studentName }: ResultsScreenProps) => {
+const ResultsScreen = ({
+  score,
+  total,
+  onRestart,
+  onBackToMenu,
+  studentName,
+  variant = "sponge",
+}: ResultsScreenProps) => {
   useEffect(() => {
     const duration = 3000;
     const end = Date.now() + duration;
@@ -22,19 +31,50 @@ const ResultsScreen = ({ score, total, onRestart, onBackToMenu, studentName }: R
   }, []);
 
   const percentage = Math.round((score / total) * 100);
+  const slow = variant === "slowpoke";
+
   const getMessage = () => {
-    if (percentage === 100) return { emoji: "🏆", text: `PERFECT score, ${studentName}! You're a genius!` };
-    if (percentage >= 80) return { emoji: "🌟", text: `Amazing job, ${studentName}! SpongeBob is so proud of you!` };
-    if (percentage >= 60) return { emoji: "😊", text: `Great work, ${studentName}! Keep learning and you'll be even better!` };
-    if (percentage >= 40) return { emoji: "💪", text: `Good try, ${studentName}! Practice more and you'll get there!` };
-    return { emoji: "🧽", text: `Keep trying, ${studentName}! SpongeBob believes in you!` };
+    if (percentage === 100) {
+      return slow
+        ? { emoji: "🏆", text: `Skor sempurna, ${studentName}! Evolusi ke Slowking!` }
+        : { emoji: "🏆", text: `PERFECT score, ${studentName}! You're a genius!` };
+    }
+    if (percentage >= 80) {
+      return slow
+        ? { emoji: "🌟", text: `Luar biasa, ${studentName}! Slowking bangga padamu!` }
+        : { emoji: "🌟", text: `Amazing job, ${studentName}! SpongeBob is so proud of you!` };
+    }
+    if (percentage >= 60) {
+      return slow
+        ? { emoji: "😊", text: `Kerja bagus, ${studentName}! Terus belajar!` }
+        : { emoji: "😊", text: `Great work, ${studentName}! Keep learning and you'll be even better!` };
+    }
+    if (percentage >= 40) {
+      return slow
+        ? { emoji: "💪", text: `Bagus, ${studentName}! Latihan lagi pasti makin jago!` }
+        : { emoji: "💪", text: `Good try, ${studentName}! Practice more and you'll get there!` };
+    }
+    return slow
+      ? { emoji: "🩷", text: `Tetap semangat, ${studentName}! Kamu pasti bisa!` }
+      : { emoji: "🧽", text: `Keep trying, ${studentName}! SpongeBob believes in you!` };
   };
   const msg = getMessage();
 
   return (
     <div className="w-full max-w-lg mx-auto text-center animate-bounce-in">
       <div className="bg-primary rounded-3xl p-8 md:p-10 shadow-2xl border-4 border-primary-foreground/20">
-        <div className="text-7xl mb-4">{msg.emoji}</div>
+        {slow ? (
+          <div className="mb-4 flex justify-center">
+            <img
+              src={slowkingImg}
+              alt=""
+              className="poke-evolve-swap h-36 w-36 object-contain drop-shadow-lg md:h-44 md:w-44 select-none"
+              draggable={false}
+            />
+          </div>
+        ) : (
+          <div className="text-7xl mb-4">{msg.emoji}</div>
+        )}
         <h1 className="font-spongeDisplay text-3xl md:text-4xl text-primary-foreground mb-1">
           Congrats, {studentName}! 🎉
         </h1>

@@ -2,6 +2,9 @@
   "firestore": {
     "rules": "firestore.rules"
   },
+  "storage": {
+    "rules": "storage.rules"
+  },
   "hosting": {
     "public": "dist",
     "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
@@ -10,8 +13,8 @@
       { "source": "/shape/**", "destination": "/wheel/shape", "type": 301 },
       { "source": "/fraction", "destination": "/wheel/fraction", "type": 301 },
       { "source": "/fraction/**", "destination": "/wheel/fraction", "type": 301 },
-      { "source": "/sponge", "destination": "/wheel/sponge", "type": 301 },
-      { "source": "/sponge/**", "destination": "/wheel/sponge", "type": 301 }
+      { "source": "/sponge", "destination": "/wheel/slowpoke", "type": 301 },
+      { "source": "/sponge/**", "destination": "/wheel/slowpoke", "type": 301 }
     ],
     "rewrites": [
       {
