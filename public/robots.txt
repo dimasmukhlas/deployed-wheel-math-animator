@@ -2,5 +2,5 @@
 User-agent: *
 Allow: /
 
-# Sitemap (generated with SITE_URL=https://cognizowheel.web.app)
-Sitemap: https://cognizowheel.web.app/sitemap.xml
+# Sitemap (generated with SITE_URL=https://cognizo.net)
+Sitemap: https://cognizo.net/sitemap.xml

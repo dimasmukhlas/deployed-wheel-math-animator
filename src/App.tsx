@@ -13,6 +13,12 @@ import YouTubeIndex from "@/pages/youtube/YouTubeIndex";
 import YouTubePostPage from "@/pages/youtube/YouTubePost";
 import AdminCMS from "@/pages/admin/AdminCMS";
 import { SiteFooter } from "@/components/site/SiteFooter";
+import ShortsSolutionPage from "@/pages/solutions/ShortsSolutionPage";
+import PatternsDominoDicePage from "@/pages/interactive/PatternsDominoDicePage";
+import ShortsChickensFiveMonthsPage from "@/pages/solutions/ShortsChickensFiveMonthsPage";
+import ShortsLogExpressionPage from "@/pages/solutions/ShortsLogExpressionPage";
+import ShortsTumbakToM2Page from "@/pages/solutions/ShortsTumbakToM2Page";
+import TrackYourJobTalentfyPage from "@/pages/seo/TrackYourJobTalentfyPage";
 
 const queryClient = new QueryClient();
 
@@ -33,6 +39,18 @@ const App = () => (
             <Route path="/youtube" element={<YouTubeIndex />} />
             <Route path="/youtube/:slug" element={<YouTubePostPage />} />
             <Route path="/admin" element={<AdminCMS />} />
+            <Route path="/shorts/oifgJ8l5Iik" element={<ShortsSolutionPage />} />
+            <Route path="/shorts/cGT9jICNDBs" element={<ShortsChickensFiveMonthsPage />} />
+            <Route path="/shorts/HltvQZmIgFg" element={<ShortsTumbakToM2Page />} />
+            <Route path="/shorts/X0qA1h47OCY" element={<ShortsLogExpressionPage />} />
+            <Route
+              path="/interact/pola-bilangan-domino-dan-persegi"
+              element={<PatternsDominoDicePage />}
+            />
+            <Route
+              path="/2026/01/track-your-job-with-jejak-talenta.html"
+              element={<TrackYourJobTalentfyPage />}
+            />
             <Route path="/wheel" element={<WheelAppLayout />}>
               <Route index element={<WheelPlayground />} />
               <Route path="shape" element={<CognizoShapeApp />} />

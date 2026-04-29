@@ -12,11 +12,19 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const root = join(__dirname, "..");
 const publicDir = join(root, "public");
 
-const SITE_URL = (process.env.SITE_URL || "https://cognizowheel.web.app").replace(/\/$/, "");
+// Default points to the custom domain your Search Console uses.
+// Override with SITE_URL env var when building for a different host.
+const SITE_URL = (process.env.SITE_URL || "https://cognizo.net").replace(/\/$/, "");
 
 const routes = [
   { path: "/", changefreq: "weekly", priority: "1.0" },
   { path: "/youtube", changefreq: "weekly", priority: "0.9" },
+  { path: "/shorts/oifgJ8l5Iik", changefreq: "monthly", priority: "0.6" },
+  { path: "/shorts/cGT9jICNDBs", changefreq: "monthly", priority: "0.6" },
+  { path: "/shorts/HltvQZmIgFg", changefreq: "monthly", priority: "0.6" },
+  { path: "/shorts/X0qA1h47OCY", changefreq: "monthly", priority: "0.6" },
+  { path: "/interact/pola-bilangan-domino-dan-persegi", changefreq: "monthly", priority: "0.6" },
+  { path: "/2026/01/track-your-job-with-jejak-talenta.html", changefreq: "yearly", priority: "0.4" },
   { path: "/wheel", changefreq: "weekly", priority: "0.9" },
   { path: "/wheel/shape", changefreq: "weekly", priority: "0.8" },
   { path: "/wheel/fraction", changefreq: "weekly", priority: "0.8" },
