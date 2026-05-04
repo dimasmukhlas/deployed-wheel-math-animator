@@ -13,11 +13,11 @@ const EVOLUTION_NAMES: Record<Starter, [string, string, string]> = {
 
 const PALETTE: Record<
   Starter,
-  { body: string; accent: string; dark: string }
+  { body: string; accent: string; dark: string; belly: string }
 > = {
-  charmander: { body: "#f97316", accent: "#fbbf24", dark: "#c2410c" },
-  bulbasaur: { body: "#22c55e", accent: "#86efac", dark: "#166534" },
-  squirtle: { body: "#38bdf8", accent: "#7dd3fc", dark: "#0369a1" },
+  charmander: { body: "#f97316", accent: "#fbbf24", dark: "#c2410c", belly: "#fef3c7" },
+  bulbasaur: { body: "#4ade80", accent: "#86efac", dark: "#166534", belly: "#dcfce7" },
+  squirtle: { body: "#38bdf8", accent: "#bae6fd", dark: "#0369a1", belly: "#fef9c3" },
 };
 
 type Entity = { kind: "cactus" | "candy"; x: number; y: number; w: number; h: number; collected?: boolean };
@@ -29,9 +29,399 @@ function evolutionStage(candy: number): 0 | 1 | 2 {
 }
 
 function playerSize(stage: 0 | 1 | 2): { w: number; h: number } {
-  if (stage === 0) return { w: 44, h: 40 };
-  if (stage === 1) return { w: 52, h: 46 };
-  return { w: 60, h: 52 };
+  if (stage === 0) return { w: 52, h: 42 };
+  if (stage === 1) return { w: 58, h: 48 };
+  return { w: 68, h: 54 };
+}
+
+/** Normalized coords in player box; head faces right (runner direction). */
+function drawCharmanderLine(
+  ctx: CanvasRenderingContext2D,
+  w: number,
+  h: number,
+  stage: 0 | 1 | 2,
+  p: (typeof PALETTE)["charmander"]
+) {
+  const X = (t: number) => t * w;
+  const Y = (t: number) => t * h;
+  const m = Math.min(w, h);
+
+  // Tail (curves behind to the left) + flame tip
+  ctx.fillStyle = p.body;
+  ctx.beginPath();
+  ctx.moveTo(X(0.38), Y(0.78));
+  ctx.quadraticCurveTo(X(0.05), Y(0.62), X(-0.06 - stage * 0.02), Y(0.38));
+  ctx.quadraticCurveTo(X(-0.12 - stage * 0.03), Y(0.18), X(0.02), Y(0.08 + stage * 0.02));
+  ctx.quadraticCurveTo(X(0.18), Y(0.22), X(0.32), Y(0.52));
+  ctx.lineTo(X(0.38), Y(0.78));
+  ctx.closePath();
+  ctx.fill();
+  ctx.strokeStyle = p.dark;
+  ctx.lineWidth = 1.25;
+  ctx.stroke();
+
+  const flameR = m * (0.14 + stage * 0.025);
+  const grad = ctx.createRadialGradient(X(0.02), Y(0.12), 0, X(0.02), Y(0.12), flameR);
+  grad.addColorStop(0, "#fef08a");
+  grad.addColorStop(0.45, "#f97316");
+  grad.addColorStop(1, "#dc2626");
+  ctx.fillStyle = grad;
+  ctx.beginPath();
+  ctx.arc(X(0.02), Y(0.1 + stage * 0.02), flameR, 0, Math.PI * 2);
+  ctx.fill();
+
+  // Belly (cream underside)
+  ctx.fillStyle = p.belly;
+  ctx.beginPath();
+  ctx.ellipse(X(0.4), Y(0.68), w * 0.14, h * 0.12, 0.1, 0, Math.PI * 2);
+  ctx.fill();
+
+  // Body
+  ctx.fillStyle = p.body;
+  ctx.beginPath();
+  ctx.ellipse(X(0.42), Y(0.66), w * 0.2, h * 0.2, 0.05, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.strokeStyle = p.dark;
+  ctx.lineWidth = 1.25;
+  ctx.stroke();
+
+  // Wing membrane (Charizard-style) — stage 2
+  if (stage >= 2) {
+    ctx.fillStyle = "#ea580c";
+    ctx.beginPath();
+    ctx.moveTo(X(0.28), Y(0.42));
+    ctx.quadraticCurveTo(X(-0.02), Y(0.18), X(0.08), Y(0.52));
+    ctx.quadraticCurveTo(X(0.22), Y(0.55), X(0.28), Y(0.42));
+    ctx.closePath();
+    ctx.fill();
+    ctx.strokeStyle = "#9a3412";
+    ctx.stroke();
+    ctx.fillStyle = "#fdba74";
+    ctx.beginPath();
+    ctx.moveTo(X(0.26), Y(0.44));
+    ctx.lineTo(X(0.06), Y(0.32));
+    ctx.lineTo(X(0.14), Y(0.48));
+    ctx.closePath();
+    ctx.fill();
+  }
+
+  // Head (reptile snout)
+  ctx.fillStyle = p.body;
+  ctx.beginPath();
+  ctx.ellipse(X(0.72), Y(0.38), m * 0.22, m * 0.2, 0, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.strokeStyle = p.dark;
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.ellipse(X(0.92), Y(0.42), m * 0.12, m * 0.09, 0.15, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.stroke();
+
+  // Horn ridge (Charmeleon+)
+  if (stage >= 1) {
+    ctx.fillStyle = p.dark;
+    ctx.beginPath();
+    ctx.moveTo(X(0.62), Y(0.22));
+    ctx.lineTo(X(0.68 + stage * 0.02), Y(0.12));
+    ctx.lineTo(X(0.74), Y(0.24));
+    ctx.closePath();
+    ctx.fill();
+  }
+
+  // Eyes (angry-friendly)
+  ctx.fillStyle = "#0f172a";
+  ctx.beginPath();
+  ctx.ellipse(X(0.82), Y(0.34), 3.2, 3.8, 0.2, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.beginPath();
+  ctx.ellipse(X(0.7), Y(0.36), 2.6, 3.2, -0.15, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.fillStyle = "#fff";
+  ctx.beginPath();
+  ctx.arc(X(0.83), Y(0.32), 1.1, 0, Math.PI * 2);
+  ctx.arc(X(0.71), Y(0.34), 0.9, 0, Math.PI * 2);
+  ctx.fill();
+
+  // Tooth grin
+  ctx.strokeStyle = "#0f172a";
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.arc(X(0.88), Y(0.46), 4, 0.1, Math.PI - 0.1);
+  ctx.stroke();
+
+  // Arms
+  ctx.fillStyle = p.body;
+  ctx.beginPath();
+  ctx.ellipse(X(0.48), Y(0.58), m * 0.08, m * 0.06, 0.5, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.strokeStyle = p.dark;
+  ctx.stroke();
+}
+
+function drawBulbasaurLine(
+  ctx: CanvasRenderingContext2D,
+  w: number,
+  h: number,
+  stage: 0 | 1 | 2,
+  p: (typeof PALETTE)["bulbasaur"]
+) {
+  const X = (t: number) => t * w;
+  const Y = (t: number) => t * h;
+  const m = Math.min(w, h);
+
+  // Back bulb / flower (on top, behind head from side)
+  if (stage === 0) {
+    ctx.fillStyle = "#86efac";
+    ctx.beginPath();
+    ctx.moveTo(X(0.22), Y(0.08));
+    ctx.quadraticCurveTo(X(0.08), Y(0.28), X(0.18), Y(0.42));
+    ctx.quadraticCurveTo(X(0.38), Y(0.38), X(0.42), Y(0.22));
+    ctx.quadraticCurveTo(X(0.34), Y(0.06), X(0.22), Y(0.08));
+    ctx.closePath();
+    ctx.fill();
+    ctx.strokeStyle = "#166534";
+    ctx.lineWidth = 1.2;
+    ctx.stroke();
+  } else if (stage === 1) {
+    ctx.fillStyle = "#4ade80";
+    ctx.beginPath();
+    ctx.ellipse(X(0.28), Y(0.22), m * 0.2, m * 0.18, -0.2, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.strokeStyle = "#166534";
+    ctx.stroke();
+    ctx.fillStyle = "#f472b6";
+    ctx.beginPath();
+    ctx.arc(X(0.26), Y(0.16), m * 0.08, 0, Math.PI * 2);
+    ctx.fill();
+  } else {
+    // Venusaur-style flower
+    const cx = X(0.26);
+    const cy = Y(0.2);
+    const pr = m * 0.09;
+    for (let i = 0; i < 6; i++) {
+      const a = (i / 6) * Math.PI * 2 - Math.PI / 2;
+      ctx.fillStyle = i % 2 === 0 ? "#f9a8d4" : "#fbcfe8";
+      ctx.beginPath();
+      ctx.ellipse(cx + Math.cos(a) * m * 0.14, cy + Math.sin(a) * m * 0.12, pr * 1.1, pr * 0.85, a, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    ctx.fillStyle = "#fef08a";
+    ctx.beginPath();
+    ctx.arc(cx, cy, m * 0.08, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.strokeStyle = "#166534";
+    ctx.lineWidth = 1;
+    ctx.stroke();
+  }
+
+  // Body (quadruped lump)
+  ctx.fillStyle = p.body;
+  ctx.beginPath();
+  ctx.ellipse(X(0.48), Y(0.62), w * 0.26, h * 0.22, 0, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.strokeStyle = p.dark;
+  ctx.lineWidth = 1.25;
+  ctx.stroke();
+
+  // Spots
+  ctx.fillStyle = "#15803d";
+  for (const [sx, sy, sr] of [
+    [0.35, 0.58, 2.2],
+    [0.52, 0.7, 2.8],
+    [0.4, 0.72, 2],
+  ] as const) {
+    ctx.beginPath();
+    ctx.arc(X(sx), Y(sy), sr + stage * 0.3, 0, Math.PI * 2);
+    ctx.fill();
+  }
+
+  // Belly
+  ctx.fillStyle = p.belly;
+  ctx.beginPath();
+  ctx.ellipse(X(0.55), Y(0.66), w * 0.12, h * 0.1, 0.1, 0, Math.PI * 2);
+  ctx.fill();
+
+  // Legs
+  ctx.fillStyle = p.body;
+  for (const lx of [0.32, 0.44, 0.58, 0.7]) {
+    ctx.fillRect(X(lx) - 3, Y(0.78), 6 + stage, h * 0.18);
+  }
+
+  // Head
+  ctx.fillStyle = p.body;
+  ctx.beginPath();
+  ctx.ellipse(X(0.78), Y(0.42), m * 0.2, m * 0.18, 0.1, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.strokeStyle = p.dark;
+  ctx.stroke();
+
+  // Ears
+  ctx.fillStyle = p.body;
+  ctx.beginPath();
+  ctx.moveTo(X(0.66), Y(0.28));
+  ctx.lineTo(X(0.62), Y(0.12));
+  ctx.lineTo(X(0.74), Y(0.24));
+  ctx.closePath();
+  ctx.fill();
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.moveTo(X(0.82), Y(0.26));
+  ctx.lineTo(X(0.88), Y(0.1));
+  ctx.lineTo(X(0.9), Y(0.26));
+  ctx.closePath();
+  ctx.fill();
+  ctx.stroke();
+
+  // Eyes (large anime)
+  ctx.fillStyle = "#fff";
+  ctx.beginPath();
+  ctx.ellipse(X(0.84), Y(0.38), 5, 5.5, 0, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.fillStyle = "#7c3aed";
+  ctx.beginPath();
+  ctx.arc(X(0.85), Y(0.39), 3, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.fillStyle = "#0f172a";
+  ctx.beginPath();
+  ctx.arc(X(0.86), Y(0.38), 1.3, 0, Math.PI * 2);
+  ctx.fill();
+
+  // Mouth / tiny teeth
+  ctx.strokeStyle = "#14532d";
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(X(0.92), Y(0.48));
+  ctx.quadraticCurveTo(X(0.96), Y(0.52), X(0.9), Y(0.54));
+  ctx.stroke();
+}
+
+function drawSquirtleLine(
+  ctx: CanvasRenderingContext2D,
+  w: number,
+  h: number,
+  stage: 0 | 1 | 2,
+  p: (typeof PALETTE)["squirtle"]
+) {
+  const X = (t: number) => t * w;
+  const Y = (t: number) => t * h;
+  const m = Math.min(w, h);
+
+  // Shell (brown rounded on back)
+  const shellGrad = ctx.createLinearGradient(X(0.15), Y(0.35), X(0.42), Y(0.75));
+  shellGrad.addColorStop(0, "#a16207");
+  shellGrad.addColorStop(1, "#713f12");
+  ctx.fillStyle = shellGrad;
+  ctx.beginPath();
+  ctx.ellipse(X(0.32), Y(0.55), w * 0.2, h * 0.2, -0.25, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.strokeStyle = "#422006";
+  ctx.lineWidth = 1.25;
+  ctx.stroke();
+  // Shell scutes
+  ctx.strokeStyle = "#ca8a04";
+  ctx.lineWidth = 0.8;
+  for (let i = 0; i < 3; i++) {
+    ctx.beginPath();
+    ctx.arc(X(0.26 + i * 0.06), Y(0.48 + i * 0.04), m * 0.06, 0.3, Math.PI - 0.3);
+    ctx.stroke();
+  }
+
+  // Blastoise cannons
+  if (stage >= 2) {
+    ctx.fillStyle = "#64748b";
+    for (const [cx, cy, ang] of [
+      [0.22, 0.42, -0.5],
+      [0.34, 0.38, -0.25],
+    ] as const) {
+      ctx.save();
+      ctx.translate(X(cx), Y(cy));
+      ctx.rotate(ang);
+      ctx.fillRect(0, -4, m * 0.35, 8);
+      ctx.strokeStyle = "#334155";
+      ctx.strokeRect(0, -4, m * 0.35, 8);
+      ctx.restore();
+    }
+  }
+
+  // Body (blue under shell)
+  ctx.fillStyle = p.body;
+  ctx.beginPath();
+  ctx.ellipse(X(0.52), Y(0.66), w * 0.18, h * 0.16, 0.1, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.strokeStyle = p.dark;
+  ctx.stroke();
+
+  // Belly
+  ctx.fillStyle = p.belly;
+  ctx.beginPath();
+  ctx.ellipse(X(0.58), Y(0.68), w * 0.1, h * 0.09, 0.15, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.strokeStyle = "#ca8a04";
+  ctx.lineWidth = 1;
+  ctx.stroke();
+
+  // Legs
+  ctx.fillStyle = p.body;
+  ctx.beginPath();
+  ctx.ellipse(X(0.4), Y(0.88), 7, 5, 0, 0, Math.PI * 2);
+  ctx.ellipse(X(0.62), Y(0.9), 7, 5, 0, 0, Math.PI * 2);
+  ctx.fill();
+
+  // Head
+  ctx.fillStyle = p.body;
+  ctx.beginPath();
+  ctx.ellipse(X(0.78), Y(0.42), m * 0.2, m * 0.17, 0.05, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.strokeStyle = p.dark;
+  ctx.stroke();
+
+  // Wartortle ear tufts
+  if (stage >= 1) {
+    ctx.fillStyle = "#f8fafc";
+    ctx.beginPath();
+    ctx.moveTo(X(0.62), Y(0.32));
+    ctx.quadraticCurveTo(X(0.52), Y(0.08 + (2 - stage) * 0.04), X(0.68), Y(0.28));
+    ctx.closePath();
+    ctx.fill();
+    ctx.strokeStyle = "#94a3b8";
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(X(0.72), Y(0.3));
+    ctx.quadraticCurveTo(X(0.78), Y(0.06), X(0.82), Y(0.28));
+    ctx.closePath();
+    ctx.fill();
+    ctx.stroke();
+  }
+
+  // Swirly tail (Wartortle+)
+  if (stage >= 1) {
+    ctx.strokeStyle = "#e2e8f0";
+    ctx.lineWidth = 3;
+    ctx.beginPath();
+    ctx.arc(X(0.12), Y(0.72), m * 0.1, 0, Math.PI * 1.5);
+    ctx.stroke();
+  }
+
+  // Eyes
+  ctx.fillStyle = "#fff";
+  ctx.beginPath();
+  ctx.ellipse(X(0.84), Y(0.38), 4.5, 5, 0, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.fillStyle = "#1e3a8a";
+  ctx.beginPath();
+  ctx.arc(X(0.85), Y(0.39), 2.8, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.fillStyle = "#0f172a";
+  ctx.beginPath();
+  ctx.arc(X(0.86), Y(0.38), 1, 0, Math.PI * 2);
+  ctx.fill();
+
+  // Nostrils
+  ctx.fillStyle = "#0369a1";
+  ctx.beginPath();
+  ctx.arc(X(0.94), Y(0.44), 1.2, 0, Math.PI * 2);
+  ctx.arc(X(0.97), Y(0.45), 1.2, 0, Math.PI * 2);
+  ctx.fill();
 }
 
 export default function PokemonStarterRunPage() {
@@ -70,51 +460,9 @@ export default function PokemonStarterRunPage() {
       const p = PALETTE[st];
       ctx.save();
       ctx.translate(x, y);
-
-      // body
-      ctx.fillStyle = p.body;
-      const r = 10;
-      ctx.beginPath();
-      ctx.moveTo(r, 0);
-      ctx.lineTo(w - r, 0);
-      ctx.quadraticCurveTo(w, 0, w, r);
-      ctx.lineTo(w, h - r);
-      ctx.quadraticCurveTo(w, h, w - r, h);
-      ctx.lineTo(r, h);
-      ctx.quadraticCurveTo(0, h, 0, h - r);
-      ctx.lineTo(0, r);
-      ctx.quadraticCurveTo(0, 0, r, 0);
-      ctx.closePath();
-      ctx.fill();
-      ctx.strokeStyle = p.dark;
-      ctx.lineWidth = 2;
-      ctx.stroke();
-
-      // simple face
-      ctx.fillStyle = "#1e293b";
-      const eyeY = h * 0.35;
-      ctx.fillRect(w * 0.22, eyeY, 6, 6);
-      ctx.fillRect(w * 0.62, eyeY, 6, 6);
-      ctx.fillStyle = p.accent;
-      if (st === "charmander") {
-        ctx.beginPath();
-        ctx.moveTo(w + 4, h * 0.25);
-        ctx.lineTo(w + 18 + stage * 4, h * 0.45);
-        ctx.lineTo(w + 4, h * 0.55);
-        ctx.fill();
-      } else if (st === "bulbasaur") {
-        ctx.beginPath();
-        ctx.arc(w * 0.5, -6 - stage * 2, 10 + stage * 2, 0, Math.PI * 2);
-        ctx.fill();
-      } else {
-        ctx.fillStyle = p.dark;
-        const sx = -4 - stage;
-        const sy = h * 0.35;
-        const sw = 8 + stage;
-        const sh = 14 + stage * 2;
-        ctx.fillRect(sx, sy, sw, sh);
-      }
-
+      if (st === "charmander") drawCharmanderLine(ctx, w, h, stage, p);
+      else if (st === "bulbasaur") drawBulbasaurLine(ctx, w, h, stage, p);
+      else drawSquirtleLine(ctx, w, h, stage, p);
       ctx.restore();
     },
     []

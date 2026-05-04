@@ -13,6 +13,7 @@ import {
   Calculator,
   Leaf,
   Languages,
+  Flame,
 } from "lucide-react";
 import { PopularQuestionsSection } from "@/components/PopularQuestionsSection";
 import { LearningPathsSection } from "@/components/LearningPathsSection";
@@ -48,6 +49,13 @@ function buildActivities(t: (key: keyof typeof strings.en.activities) => { title
     a("shape", "/wheel/shape", true, Shapes, "from-violet-500/20 to-fuchsia-500/10 border-accent/30"),
     a("fraction", "/wheel/fraction", true, PieChart, "from-amber-500/20 to-orange-500/10 border-secondary/40"),
     a("slowpoke", "/wheel/slowpoke", true, Languages, "from-cyan-500/20 to-teal-500/10 border-cyan-500/35"),
+    a(
+      "pokemonRun",
+      "/interact/pokemon-starter-run",
+      true,
+      Flame,
+      "from-rose-500/20 to-orange-500/10 border-rose-500/35"
+    ),
   ];
 }
 
@@ -196,6 +204,11 @@ const strings = {
         description:
           "Indonesian (and more) at the same level as before — quizzes with a Slowpoke & Pokémon-water theme instead of SpongeBob.",
       },
+      pokemonRun: {
+        title: "Starter run",
+        description:
+          "A mini runner like the classic browser game: pick Charmander, Bulbasaur, or Squirtle — jump cacti, grab candy, and evolve at 50 and 100 candy.",
+      },
     },
   },
   id: {
@@ -342,6 +355,11 @@ const strings = {
         description:
           "Bahasa Indonesia (dan lainnya) level sama seperti sebelumnya — kuis bertema Slowpoke & Pokémon air, menggantikan SpongeBob.",
       },
+      pokemonRun: {
+        title: "Lari Starter",
+        description:
+          "Permainan lari mirip game browser klasik: pilih Charmander, Bulbasaur, atau Squirtle — lompati kaktus, kumpulkan permen, dan berevolusi di 50 dan 100 permen.",
+      },
     },
   },
 } as const;
@@ -475,7 +493,7 @@ const Landing = () => {
           </p>
         </div>
 
-        <div className="grid gap-5 md:gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="grid gap-5 md:gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
         {activities.map((item) => {
           const Icon = item.icon;
           return (
