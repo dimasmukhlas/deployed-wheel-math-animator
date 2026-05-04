@@ -20,6 +20,7 @@ import ShortsLogExpressionPage from "@/pages/solutions/ShortsLogExpressionPage";
 import ShortsTumbakToM2Page from "@/pages/solutions/ShortsTumbakToM2Page";
 import TrackYourJobTalentfyPage from "@/pages/seo/TrackYourJobTalentfyPage";
 import PokemonStarterRunPage from "@/pages/interactive/PokemonStarterRunPage";
+import PokemonBattleArenaPage from "@/pages/interactive/PokemonBattleArenaPage";
 
 const queryClient = new QueryClient();
 
@@ -49,6 +50,7 @@ const App = () => (
               element={<PatternsDominoDicePage />}
             />
             <Route path="/interact/pokemon-starter-run" element={<PokemonStarterRunPage />} />
+            <Route path="/interact/pokemon-battle" element={<PokemonBattleArenaPage />} />
             <Route
               path="/2026/01/track-your-job-with-jejak-talenta.html"
               element={<TrackYourJobTalentfyPage />}

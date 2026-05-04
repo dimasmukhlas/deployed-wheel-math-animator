@@ -25,6 +25,7 @@ const routes = [
   { path: "/shorts/X0qA1h47OCY", changefreq: "monthly", priority: "0.6" },
   { path: "/interact/pola-bilangan-domino-dan-persegi", changefreq: "monthly", priority: "0.6" },
   { path: "/interact/pokemon-starter-run", changefreq: "monthly", priority: "0.6" },
+  { path: "/interact/pokemon-battle", changefreq: "monthly", priority: "0.6" },
   { path: "/2026/01/track-your-job-with-jejak-talenta.html", changefreq: "yearly", priority: "0.4" },
   { path: "/wheel", changefreq: "weekly", priority: "0.9" },
   { path: "/wheel/shape", changefreq: "weekly", priority: "0.8" },

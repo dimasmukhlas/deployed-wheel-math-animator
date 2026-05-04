@@ -60,6 +60,13 @@
     <priority>0.6</priority>
   </url>
   <url>
+    <loc>https://cognizo.net/interact/pokemon-battle</loc>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://cognizo.net/interact/pokemon-battle" />
+    <lastmod>2026-05-04</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
     <loc>https://cognizo.net/2026/01/track-your-job-with-jejak-talenta.html</loc>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://cognizo.net/2026/01/track-your-job-with-jejak-talenta.html" />
     <lastmod>2026-05-04</lastmod>

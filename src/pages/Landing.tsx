@@ -14,6 +14,7 @@ import {
   Leaf,
   Languages,
   Flame,
+  Swords,
 } from "lucide-react";
 import { PopularQuestionsSection } from "@/components/PopularQuestionsSection";
 import { LearningPathsSection } from "@/components/LearningPathsSection";
@@ -55,6 +56,13 @@ function buildActivities(t: (key: keyof typeof strings.en.activities) => { title
       true,
       Flame,
       "from-rose-500/20 to-orange-500/10 border-rose-500/35"
+    ),
+    a(
+      "pokemonBattle",
+      "/interact/pokemon-battle",
+      true,
+      Swords,
+      "from-violet-500/20 to-red-500/10 border-violet-500/35"
     ),
   ];
 }
@@ -209,6 +217,11 @@ const strings = {
         description:
           "A mini runner like the classic browser game: pick Charmander, Bulbasaur, or Squirtle — jump cacti, grab candy, and evolve at 50 and 100 candy.",
       },
+      pokemonBattle: {
+        title: "Type battle",
+        description:
+          "Turn-based fights: pick any of six Pokémon, use quick and strong hits, Guard, and a one-time heal — types help or hurt your damage.",
+      },
     },
   },
   id: {
@@ -359,6 +372,11 @@ const strings = {
         title: "Lari Starter",
         description:
           "Permainan lari mirip game browser klasik: pilih Charmander, Bulbasaur, atau Squirtle — lompati kaktus, kumpulkan permen, dan berevolusi di 50 dan 100 permen.",
+      },
+      pokemonBattle: {
+        title: "Bertarung tipe",
+        description:
+          "Bertarung bergilir: pilih salah satu dari enam Pokémon, serangan cepat & kuat, Guard, dan heal sekali — tipe musuh mempengaruhi kerusakan.",
       },
     },
   },
