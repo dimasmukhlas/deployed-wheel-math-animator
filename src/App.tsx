@@ -19,6 +19,7 @@ import ShortsChickensFiveMonthsPage from "@/pages/solutions/ShortsChickensFiveMo
 import ShortsLogExpressionPage from "@/pages/solutions/ShortsLogExpressionPage";
 import ShortsTumbakToM2Page from "@/pages/solutions/ShortsTumbakToM2Page";
 import TrackYourJobTalentfyPage from "@/pages/seo/TrackYourJobTalentfyPage";
+import PokemonStarterRunPage from "@/pages/interactive/PokemonStarterRunPage";
 
 const queryClient = new QueryClient();
 
@@ -47,6 +48,7 @@ const App = () => (
               path="/interact/pola-bilangan-domino-dan-persegi"
               element={<PatternsDominoDicePage />}
             />
+            <Route path="/interact/pokemon-starter-run" element={<PokemonStarterRunPage />} />
             <Route
               path="/2026/01/track-your-job-with-jejak-talenta.html"
               element={<TrackYourJobTalentfyPage />}
