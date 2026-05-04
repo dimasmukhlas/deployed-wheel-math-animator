@@ -496,6 +496,29 @@ const Landing = () => {
             </Button>
           </CardContent>
         </Card>
+
+        <Card className="glass-card overflow-hidden border bg-gradient-to-br from-violet-500/10 to-rose-500/5 mt-5">
+          <CardHeader className="pb-3">
+            <CardTitle className="text-xl md:text-2xl font-bold">
+              {lang === "id" ? "Mini-game bergaya Pokémon" : "Pokémon-style mini-games"}
+            </CardTitle>
+            <CardDescription>
+              {lang === "id"
+                ? "Lari hindari kaktus & kumpulkan permen, atau bertarung bergilir dengan sistem tipe. Bukan produk resmi Pokémon."
+                : "Run and collect candy, or fight turn-by-turn with types. Not an official Pokémon product."}
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="flex flex-col sm:flex-row flex-wrap gap-2">
+            <Button asChild variant="secondary" className="sm:shrink-0">
+              <Link to="/interact/pokemon-starter-run">
+                {lang === "id" ? "Lari Starter" : "Starter run"}
+              </Link>
+            </Button>
+            <Button asChild variant="secondary" className="sm:shrink-0">
+              <Link to="/interact/pokemon-battle">{lang === "id" ? "Bertarung tipe" : "Type battle"}</Link>
+            </Button>
+          </CardContent>
+        </Card>
       </section>
 
       {/* Interactive games — first for a clean, focused top */}
